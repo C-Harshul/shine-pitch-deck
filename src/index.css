@@ -1,96 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Dark premium palette */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Warm gold accent */
+    --primary: 38 92% 50%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 38 92% 50%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 38 92% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Custom tokens */
+    --gradient-gold: linear-gradient(135deg, hsl(38, 92%, 50%), hsl(28, 100%, 60%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0, 0%, 0%) 0%, hsl(0, 0%, 4%) 100%);
+    --glow-gold: 0 0 60px hsla(38, 92%, 50%, 0.15);
+    --text-gradient: linear-gradient(90deg, hsl(0, 0%, 100%), hsl(0, 0%, 70%));
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
   }
 }
 
@@ -99,7 +56,131 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Pill/Badge styling */
+  .pill {
+    @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium tracking-wide;
+    @apply border border-primary/30 text-primary bg-primary/5;
+    box-shadow: var(--glow-gold);
+  }
+
+  /* Ghost button styling */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-8 py-3 rounded-lg text-sm font-medium;
+    @apply border border-foreground/20 text-foreground bg-transparent;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:border-primary hover:text-primary hover:shadow-lg;
+  }
+
+  .btn-ghost:hover {
+    box-shadow: var(--glow-gold);
+  }
+
+  /* Primary CTA button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-8 py-3 rounded-lg text-sm font-semibold;
+    @apply bg-primary text-primary-foreground;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:scale-105 hover:shadow-xl;
+  }
+
+  /* Section container */
+  .section {
+    @apply min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 py-24;
+  }
+
+  /* Large headline */
+  .headline {
+    @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-[1.1];
+  }
+
+  /* Subtitle text */
+  .subtitle {
+    @apply text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed;
+  }
+
+  /* Feature card */
+  .feature-card {
+    @apply p-8 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm;
+    @apply transition-all duration-500 ease-out;
+    @apply hover:border-primary/30 hover:bg-card;
+  }
+
+  .feature-card:hover {
+    box-shadow: var(--glow-gold);
+  }
+
+  /* Step number */
+  .step-number {
+    @apply w-12 h-12 rounded-full flex items-center justify-center;
+    @apply text-sm font-bold text-primary border border-primary/30;
+    background: radial-gradient(circle at center, hsla(38, 92%, 50%, 0.1) 0%, transparent 70%);
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-gold);
+  }
+
+  /* Muted gradient text */
+  .text-gradient-muted {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--text-gradient);
+  }
+}
+
+@layer utilities {
+  /* Fade in animation */
+  .animate-fade-up {
+    animation: fadeUp 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Staggered delays */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+
+  /* Glow effect */
+  .glow {
+    box-shadow: var(--glow-gold);
+  }
+
+  /* Grid pattern background */
+  .bg-grid {
+    background-image: 
+      linear-gradient(to right, hsla(0, 0%, 100%, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, hsla(0, 0%, 100%, 0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* Radial gradient overlay */
+  .bg-radial {
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, hsla(38, 92%, 50%, 0.08) 0%, transparent 60%);
   }
 }
