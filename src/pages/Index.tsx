@@ -1,28 +1,33 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Problem from "@/components/Problem";
-import Solution from "@/components/Solution";
-import Process from "@/components/Process";
-import Features from "@/components/Features";
-import Control from "@/components/Control";
-import Impact from "@/components/Impact";
-import CTA from "@/components/CTA";
-import Footer from "@/components/Footer";
+import Presentation from "@/components/Presentation";
+import TitleSlide from "@/components/slides/TitleSlide";
+import ProblemSlide from "@/components/slides/ProblemSlide";
+import PainPointsSlide from "@/components/slides/PainPointsSlide";
+import SolutionSlide from "@/components/slides/SolutionSlide";
+import HowItWorksSlide from "@/components/slides/HowItWorksSlide";
+import FeaturesSlide from "@/components/slides/FeaturesSlide";
+import ControlSlide from "@/components/slides/ControlSlide";
+import ImpactSlide from "@/components/slides/ImpactSlide";
+import GTMSlide from "@/components/slides/GTMSlide";
+import VisionSlide from "@/components/slides/VisionSlide";
+import SummarySlide from "@/components/slides/SummarySlide";
+import CTASlide from "@/components/slides/CTASlide";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <Hero />
-      <Problem />
-      <Solution />
-      <Process />
-      <Features />
-      <Control />
-      <Impact />
-      <CTA />
-      <Footer />
-    </div>
+    <Presentation>
+      <TitleSlide />
+      <ProblemSlide />
+      <PainPointsSlide />
+      <SolutionSlide />
+      <HowItWorksSlide />
+      <FeaturesSlide />
+      <ControlSlide />
+      <ImpactSlide />
+      <GTMSlide />
+      <VisionSlide />
+      <SummarySlide />
+      <CTASlide />
+    </Presentation>
   );
 };
 
