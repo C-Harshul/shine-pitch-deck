@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize, Minimize } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PresentationProps {
@@ -10,6 +10,7 @@ const Presentation = ({ children }: PresentationProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const totalSlides = children.length;
 
   const goToSlide = useCallback((index: number, dir: "next" | "prev") => {
@@ -32,6 +33,29 @@ const Presentation = ({ children }: PresentationProps) => {
     }
   }, [currentSlide, goToSlide]);
 
+  // Fullscreen toggle
+  const toggleFullscreen = useCallback(async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (err) {
+      console.error("Fullscreen error:", err);
+    }
+  }, []);
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -41,12 +65,17 @@ const Presentation = ({ children }: PresentationProps) => {
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
         prevSlide();
+      } else if (e.key === "f" || e.key === "F") {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (e.key === "Escape" && isFullscreen) {
+        // Escape is handled by browser for exiting fullscreen
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [nextSlide, prevSlide]);
+  }, [nextSlide, prevSlide, toggleFullscreen, isFullscreen]);
 
   // Click to advance
   const handleClick = (e: React.MouseEvent) => {
@@ -92,6 +121,25 @@ const Presentation = ({ children }: PresentationProps) => {
           </div>
         ))}
       </div>
+
+      {/* Fullscreen toggle button */}
+      <button
+        onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }}
+        className={cn(
+          "absolute top-6 right-6 z-50",
+          "w-10 h-10 rounded-full flex items-center justify-center",
+          "bg-card/50 border border-border/50 backdrop-blur-sm",
+          "transition-all duration-300 hover:bg-card hover:border-primary/30",
+          "group"
+        )}
+        title={isFullscreen ? "Exit fullscreen (F)" : "Enter fullscreen (F)"}
+      >
+        {isFullscreen ? (
+          <Minimize className="w-4 h-4 transition-transform group-hover:scale-110" />
+        ) : (
+          <Maximize className="w-4 h-4 transition-transform group-hover:scale-110" />
+        )}
+      </button>
 
       {/* Navigation arrows */}
       <button
@@ -146,7 +194,7 @@ const Presentation = ({ children }: PresentationProps) => {
 
       {/* Click hint */}
       <div className="absolute bottom-8 left-8 z-50 text-xs text-muted-foreground/50">
-        Click to advance • Arrow keys to navigate
+        Click to advance • Arrow keys to navigate • F for fullscreen
       </div>
     </div>
   );
