@@ -270,10 +270,13 @@ const HockeyStickSlide = () => {
               <Area
                 type="monotone"
                 dataKey="y"
-                stroke="url(#curveGradient)"
-                strokeWidth={4}
-                fill="url(#areaGradient)"
+                stroke="hsl(38, 92%, 50%)"
+                strokeWidth={6}
+                fill="hsl(38, 92%, 50%)"
+                fillOpacity={0.2}
                 isAnimationActive={false}
+                dot={{ fill: "hsl(38, 92%, 50%)", strokeWidth: 0, r: 4 }}
+                activeDot={{ fill: "hsl(38, 92%, 60%)", strokeWidth: 0, r: 6 }}
               />
             </AreaChart>
           </ResponsiveContainer>
