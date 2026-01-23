@@ -195,7 +195,7 @@ const HockeyStickSlide = () => {
         <div className="flex-1 relative min-h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
-              data={animatedData.length > 0 ? animatedData : fullData}
+              data={animatedData}
               margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
             >
               <GradientDefs />
