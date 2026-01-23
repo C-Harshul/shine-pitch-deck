@@ -67,6 +67,12 @@ const HockeyStickSlide = () => {
     setPhase(1);
   }, [resetAnimation]);
 
+  const showClosingOverlay = useCallback(() => {
+    if (phase === 5 && !showClosing) {
+      setShowClosing(true);
+    }
+  }, [phase, showClosing]);
+
   // Animation sequence controller
   useEffect(() => {
     if (!isPlaying) return;
@@ -117,17 +123,12 @@ const HockeyStickSlide = () => {
     }
 
     if (phase === 4) {
-      // SCENE 4: ROI Multiplier (5 seconds)
+      // SCENE 4: ROI Multiplier (5 seconds) - then stop and wait for click
       timers.push(setTimeout(() => setShowROI(true), 500));
-      timers.push(setTimeout(() => setPhase(5), 5000));
-    }
-
-    if (phase === 5) {
-      // CLOSING (4 seconds)
-      timers.push(setTimeout(() => setShowClosing(true), 500));
       timers.push(setTimeout(() => {
         setIsPlaying(false);
-      }, 4000));
+        setPhase(5); // Ready for closing, but requires click
+      }, 5000));
     }
 
     return () => {
@@ -182,6 +183,15 @@ const HockeyStickSlide = () => {
             <Play className="w-4 h-4" />
             <span className="text-sm">Play Animation</span>
           </button>
+          {phase === 5 && !showClosing && (
+            <button
+              onClick={showClosingOverlay}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/20 border border-green-500/30 hover:bg-green-500/30 transition-colors animate-pulse"
+            >
+              <Play className="w-4 h-4" />
+              <span className="text-sm">Show Results</span>
+            </button>
+          )}
           <button
             onClick={resetAnimation}
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 border border-border/50 hover:bg-card transition-colors"
