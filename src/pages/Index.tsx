@@ -5,6 +5,7 @@ import PainPointsSlide from "@/components/slides/PainPointsSlide";
 import SolutionSlide from "@/components/slides/SolutionSlide";
 import HowItWorksSlide from "@/components/slides/HowItWorksSlide";
 import FeaturesSlide from "@/components/slides/FeaturesSlide";
+import HockeyStickSlide from "@/components/slides/HockeyStickSlide";
 import ControlSlide from "@/components/slides/ControlSlide";
 import ImpactSlide from "@/components/slides/ImpactSlide";
 import GTMSlide from "@/components/slides/GTMSlide";
@@ -21,6 +22,7 @@ const Index = () => {
       <SolutionSlide />
       <HowItWorksSlide />
       <FeaturesSlide />
+      <HockeyStickSlide />
       <ControlSlide />
       <ImpactSlide />
       <GTMSlide />
