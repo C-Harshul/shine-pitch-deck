@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Receipt, ClipboardList, CheckCircle2, X } from "lucide-react";
+import { FileText, Receipt, ClipboardList, CheckCircle2, X, Mail, MessageSquare, Globe, Brain } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface DocumentProcessingAnimationProps {
@@ -47,10 +47,10 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
     };
   }, [isOpen]);
 
-  const documents = [
-    { icon: FileText, label: "Invoice", color: "text-blue-400" },
-    { icon: Receipt, label: "Receipt", color: "text-green-400" },
-    { icon: ClipboardList, label: "PO", color: "text-cyan-400" },
+  const documentSources = [
+    { sourceIcon: Mail, sourceName: "Email", docIcon: FileText, docLabel: "Invoice", sourceColor: "text-red-400", docColor: "text-blue-400" },
+    { sourceIcon: MessageSquare, sourceName: "Slack", docIcon: Receipt, docLabel: "Receipt", sourceColor: "text-purple-400", docColor: "text-emerald-400" },
+    { sourceIcon: Globe, sourceName: "Web Portal", docIcon: ClipboardList, docLabel: "PO", sourceColor: "text-sky-400", docColor: "text-cyan-400" },
   ];
 
   const ledgerEntries = [
@@ -106,14 +106,14 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
             {/* Main animation container */}
             <div className="relative w-full h-full flex items-center justify-between px-12 pt-8">
               
-              {/* Left: Incoming Documents */}
-              <div className="flex flex-col gap-4 w-[140px]">
-                {documents.map((doc, i) => (
+              {/* Left: Incoming Documents from Sources */}
+              <div className="flex flex-col gap-3 w-[180px]">
+                {documentSources.map((source, i) => (
                   <motion.div
                     key={i}
-                    initial={{ x: -100, opacity: 0 }}
+                    initial={{ x: -120, opacity: 0 }}
                     animate={{
-                      x: phase >= 1 && phase < 3 ? 0 : phase >= 3 ? 200 : -100,
+                      x: phase >= 1 && phase < 3 ? 0 : phase >= 3 ? 220 : -120,
                       opacity: phase >= 1 && phase < 3 ? 1 : 0,
                       scale: phase === 2 ? 0.8 : 1,
                     }}
@@ -122,10 +122,18 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                       delay: i * 0.3,
                       ease: "easeOut"
                     }}
-                    className="flex items-center gap-3 p-3 bg-muted/30 border border-border/50 rounded-lg"
+                    className="flex items-center gap-2 p-2.5 bg-muted/30 border border-border/50 rounded-lg"
                   >
-                    <doc.icon className={`w-5 h-5 ${doc.color}`} />
-                    <span className="text-sm font-medium">{doc.label}</span>
+                    <div className={`p-1.5 rounded bg-muted/50 ${source.sourceColor}`}>
+                      <source.sourceIcon className="w-4 h-4" />
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-1">
+                      <source.docIcon className={`w-4 h-4 ${source.docColor}`} />
+                      <div className="flex flex-col">
+                        <span className="text-xs font-medium">{source.docLabel}</span>
+                        <span className="text-[10px] text-muted-foreground">via {source.sourceName}</span>
+                      </div>
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -204,18 +212,19 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                     ))}
                   </svg>
 
-                  {/* Center core */}
+                  {/* Center core with Brain and Numina */}
                   <motion.div
                     animate={{
-                      scale: phase >= 2 && phase < 4 ? [1, 1.2, 1] : 1
+                      scale: phase >= 2 && phase < 4 ? [1, 1.15, 1] : 1
                     }}
                     transition={{
                       duration: 1,
                       repeat: phase >= 2 && phase < 4 ? Infinity : 0
                     }}
-                    className="w-12 h-12 rounded-full bg-primary/30 border border-primary flex items-center justify-center"
+                    className="flex flex-col items-center justify-center gap-1"
                   >
-                    <span className="text-primary font-bold text-xs">AI</span>
+                    <Brain className="w-10 h-10 text-primary" />
+                    <span className="text-primary font-bold text-sm tracking-wide">Numina</span>
                   </motion.div>
 
                   {/* Processing indicator */}
