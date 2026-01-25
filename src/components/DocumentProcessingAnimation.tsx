@@ -137,55 +137,27 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                 ))}
               </div>
 
-              {/* Animated Arrows flowing to brain */}
-              <div className="flex flex-col gap-3 items-center justify-center w-[80px]">
+              {/* Simple Arrows flowing to brain */}
+              <div className="flex flex-col gap-6 items-center justify-center w-[60px]">
                 {[0, 1, 2].map((i) => (
-                  <motion.div
+                  <motion.svg
                     key={i}
-                    className="flex items-center gap-1"
+                    width="50"
+                    height="16"
+                    viewBox="0 0 50 16"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: phase >= 2 ? 1 : 0 }}
-                    transition={{ delay: i * 0.2 }}
+                    animate={{ opacity: phase >= 2 ? 1 : 0.3 }}
+                    transition={{ duration: 0.5, delay: i * 0.15 }}
                   >
-                    {[0, 1, 2].map((j) => (
-                      <motion.div
-                        key={j}
-                        className="w-2 h-2 rounded-full bg-primary"
-                        animate={{
-                          x: phase >= 2 ? [0, 20, 40] : 0,
-                          opacity: phase >= 2 ? [1, 0.7, 0] : 0,
-                        }}
-                        transition={{
-                          duration: 1.2,
-                          delay: i * 0.2 + j * 0.15,
-                          repeat: phase >= 2 && phase < 4 ? Infinity : 0,
-                          ease: "easeOut"
-                        }}
-                      />
-                    ))}
-                    <motion.svg 
-                      width="20" 
-                      height="12" 
-                      viewBox="0 0 20 12"
-                      animate={{
-                        x: phase >= 2 ? [0, 5, 0] : 0,
-                        opacity: phase >= 2 ? 1 : 0
-                      }}
-                      transition={{
-                        duration: 0.8,
-                        repeat: phase >= 2 && phase < 4 ? Infinity : 0,
-                      }}
-                    >
-                      <path 
-                        d="M0 6 L15 6 M10 1 L15 6 L10 11" 
-                        stroke="hsl(var(--primary))" 
-                        strokeWidth="2" 
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </motion.svg>
-                  </motion.div>
+                    <path
+                      d="M0 8 L40 8 M32 2 L42 8 L32 14"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth="2"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </motion.svg>
                 ))}
               </div>
 
