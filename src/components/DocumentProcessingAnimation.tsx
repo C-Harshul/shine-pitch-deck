@@ -113,9 +113,8 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                     key={i}
                     initial={{ x: -120, opacity: 0 }}
                     animate={{
-                      x: phase >= 1 && phase < 3 ? 0 : phase >= 3 ? 220 : -120,
-                      opacity: phase >= 1 && phase < 3 ? 1 : 0,
-                      scale: phase === 2 ? 0.8 : 1,
+                      x: phase >= 1 ? 0 : -120,
+                      opacity: phase >= 1 ? 1 : 0,
                     }}
                     transition={{
                       duration: 0.8,
