@@ -22,7 +22,7 @@ const VisionSlide = () => {
           
           <div className="feature-card text-left animate-fade-up delay-300">
             <div className="text-primary text-sm uppercase tracking-widest mb-2">Future</div>
-            <h3 className="text-2xl font-bold">Automated & Advisory</h3>
+            <h3 className="text-2xl font-bold">Automated and proactive</h3>
           </div>
         </div>
 

@@ -4,18 +4,18 @@ import Slide from "@/components/Slide";
 const controls = [
   {
     icon: Settings,
-    title: "You set the rules",
+    title: "Accountants set the rules",
     description: "Define what gets flagged, auto-approved, or needs review"
   },
   {
     icon: Eye,
-    title: "You see everything",
+    title: "CPAs see everything",
     description: "Full transparency on what AI changed and why"
   },
   {
     icon: CheckSquare,
-    title: "You approve first",
-    description: "Nothing touches the books without your sign-off"
+    title: "CPAs approve first",
+    description: "Nothing touches the books without CPA sign-off"
   }
 ];
 
@@ -32,13 +32,13 @@ const ControlSlide = () => {
             <h2 className="text-4xl md:text-5xl font-bold animate-fade-up delay-100">
               AI does the work.
               <br />
-              <span className="text-gradient">You make the decisions.</span>
+              <span className="text-gradient">Accountants make the decisions.</span>
             </h2>
             
             <p className="text-xl text-muted-foreground mt-6 animate-fade-up delay-200">
               Accountants can't hand the books to a black box.
               <br />
-              Numina keeps you in control.
+              Numina keeps CPAs in control.
             </p>
           </div>
 
