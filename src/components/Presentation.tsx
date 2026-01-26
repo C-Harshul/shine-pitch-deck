@@ -80,8 +80,8 @@ const Presentation = ({ children }: PresentationProps) => {
   // Click to advance
   const handleClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    // Don't advance if clicking on interactive elements
-    if (target.closest("button") || target.closest("a")) return;
+    // Don't advance if clicking on interactive elements or feature cards
+    if (target.closest("button") || target.closest("a") || target.closest(".feature-card")) return;
     
     const rect = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - rect.left;

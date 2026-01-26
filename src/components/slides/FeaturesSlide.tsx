@@ -30,7 +30,8 @@ const features = [
 const FeaturesSlide = () => {
   const [showReconcileAnimation, setShowReconcileAnimation] = useState(false);
 
-  const handleCardClick = (index: number) => {
+  const handleCardClick = (e: React.MouseEvent, index: number) => {
+    e.stopPropagation(); // Prevent slide navigation
     if (features[index].clickable) {
       setShowReconcileAnimation(true);
     }
@@ -53,7 +54,7 @@ const FeaturesSlide = () => {
               key={index} 
               className={`feature-card animate-fade-up ${feature.clickable ? 'cursor-pointer hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all' : ''}`}
               style={{ animationDelay: `${200 + index * 100}ms` }}
-              onClick={() => handleCardClick(index)}
+              onClick={(e) => handleCardClick(e, index)}
             >
               <div className="step-number mb-6">
                 <feature.icon className="w-5 h-5" />
