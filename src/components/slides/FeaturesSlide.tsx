@@ -2,6 +2,7 @@ import { RefreshCw, Flag, Search } from "lucide-react";
 import { useState } from "react";
 import Slide from "@/components/Slide";
 import DocumentProcessingAnimation from "@/components/DocumentProcessingAnimation";
+import ResearchAnimation from "@/components/ResearchAnimation";
 
 const features = [
   {
@@ -9,31 +10,37 @@ const features = [
     title: "Reconcile",
     subtitle: "Invoices to ledger. Automatically.",
     description: "Extracts POs, invoices, and receipts from email—matches them to your ledger.",
-    clickable: true
+    clickable: true,
+    animationType: "reconcile"
   },
   {
     icon: Flag,
     title: "Flag",
     subtitle: "Your rules. Enforced in real-time.",
     description: "Define standards once. Numina catches issues before they become audit problems.",
-    clickable: false
+    clickable: false,
+    animationType: null
   },
   {
     icon: Search,
     title: "Research",
     subtitle: "Compliance answers. Instantly.",
     description: "Ask tax and regulatory questions in plain English. Get cited answers.",
-    clickable: false
+    clickable: true,
+    animationType: "research"
   }
 ];
 
 const FeaturesSlide = () => {
   const [showReconcileAnimation, setShowReconcileAnimation] = useState(false);
+  const [showResearchAnimation, setShowResearchAnimation] = useState(false);
 
   const handleCardClick = (e: React.MouseEvent, index: number) => {
-    e.stopPropagation(); // Prevent slide navigation
-    if (features[index].clickable) {
+    e.stopPropagation();
+    if (features[index].animationType === "reconcile") {
       setShowReconcileAnimation(true);
+    } else if (features[index].animationType === "research") {
+      setShowResearchAnimation(true);
     }
   };
 
@@ -76,6 +83,11 @@ const FeaturesSlide = () => {
       <DocumentProcessingAnimation 
         isOpen={showReconcileAnimation} 
         onClose={() => setShowReconcileAnimation(false)} 
+      />
+
+      <ResearchAnimation
+        isOpen={showResearchAnimation}
+        onClose={() => setShowResearchAnimation(false)}
       />
     </Slide>
   );
