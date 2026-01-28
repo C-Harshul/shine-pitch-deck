@@ -61,7 +61,7 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-[800px] h-[450px] bg-card border border-border rounded-2xl overflow-hidden"
+            className="relative w-[min(920px,calc(100vw-3rem))] h-[min(560px,calc(100vh-3rem))] bg-card border border-border rounded-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
