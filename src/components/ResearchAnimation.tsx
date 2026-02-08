@@ -8,40 +8,45 @@ interface ResearchAnimationProps {
 }
 
 // Reusable horizontal arrow with traveling dot
-const AnimatedArrow = ({ active, delay = 0, width = 36 }: { active: boolean; delay?: number; width?: number }) => (
-  <svg width={width} height="16" viewBox={`0 0 ${width} 16`}>
-    <path
-      d={`M0 8 L${width - 8} 8 M${width - 14} 3 L${width - 6} 8 L${width - 14} 13`}
-      stroke="hsl(var(--primary))"
-      strokeWidth="1.5"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      opacity={active ? 1 : 0.3}
-    />
-    {active && (
-      <motion.circle
-        r="2.5"
-        cy="8"
-        fill="hsl(var(--primary))"
-        initial={{ cx: 0, opacity: 0 }}
-        animate={{ cx: [0, width - 8], opacity: [0, 1, 1, 0] }}
-        transition={{
-          duration: 1,
-          delay,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
+const AnimatedArrow = ({ active, delay = 0, width = 36, label }: { active: boolean; delay?: number; width?: number; label?: string }) => (
+  <div className="flex flex-col items-center">
+    <svg width={width} height="16" viewBox={`0 0 ${width} 16`}>
+      <path
+        d={`M0 8 L${width - 8} 8 M${width - 14} 3 L${width - 6} 8 L${width - 14} 13`}
+        stroke="hsl(var(--primary))"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={active ? 1 : 0.3}
       />
+      {active && (
+        <motion.circle
+          r="2.5"
+          cy="8"
+          fill="hsl(var(--primary))"
+          initial={{ cx: 0, opacity: 0 }}
+          animate={{ cx: [0, width - 8], opacity: [0, 1, 1, 0] }}
+          transition={{
+            duration: 1,
+            delay,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      )}
+    </svg>
+    {label && (
+      <span className="text-[8px] text-primary/60 mt-0.5 whitespace-nowrap">{label}</span>
     )}
-  </svg>
+  </div>
 );
 
 // Reusable vertical arrow with traveling dot
-const AnimatedVerticalArrow = ({ active }: { active: boolean }) => (
-  <svg width="20" height="24" viewBox="0 0 20 24">
+const AnimatedVerticalArrow = ({ active, height = 24 }: { active: boolean; height?: number }) => (
+  <svg width="20" height={height} viewBox={`0 0 20 ${height}`}>
     <path
-      d="M10 0 L10 16 M5 12 L10 20 L15 12"
+      d={`M10 0 L10 ${height - 8} M5 ${height - 12} L10 ${height - 4} L15 ${height - 12}`}
       stroke="hsl(var(--primary))"
       strokeWidth="2"
       fill="none"
@@ -55,7 +60,36 @@ const AnimatedVerticalArrow = ({ active }: { active: boolean }) => (
         cx="10"
         fill="hsl(var(--primary))"
         initial={{ cy: 0, opacity: 0 }}
-        animate={{ cy: [0, 16], opacity: [0, 1, 1, 0] }}
+        animate={{ cy: [0, height - 8], opacity: [0, 1, 1, 0] }}
+        transition={{
+          duration: 1,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+    )}
+  </svg>
+);
+
+// Reverse horizontal arrow (right to left) with traveling dot
+const AnimatedReverseArrow = ({ active, width = 36 }: { active: boolean; width?: number }) => (
+  <svg width={width} height="16" viewBox={`0 0 ${width} 16`}>
+    <path
+      d={`M${width} 8 L8 8 M14 3 L6 8 L14 13`}
+      stroke="hsl(var(--primary))"
+      strokeWidth="1.5"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      opacity={active ? 1 : 0.3}
+    />
+    {active && (
+      <motion.circle
+        r="2.5"
+        cy="8"
+        fill="hsl(var(--primary))"
+        initial={{ cx: width, opacity: 0 }}
+        animate={{ cx: [width, 8], opacity: [0, 1, 1, 0] }}
         transition={{
           duration: 1,
           repeat: Infinity,
@@ -80,10 +114,10 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
 
       const timers: NodeJS.Timeout[] = [];
 
-      timers.push(setTimeout(() => setPhase(2), 2000));  // Data flows to VectorDB + Query starts
-      timers.push(setTimeout(() => setPhase(3), 3500));  // Retriever ↔ VectorDB
-      timers.push(setTimeout(() => setPhase(4), 5000));  // Prompt+Context to LLM
-      timers.push(setTimeout(() => setPhase(5), 6500));  // LLM answer to Web App
+      timers.push(setTimeout(() => setPhase(2), 2000));  // Data to VectorDB + Query → Web App
+      timers.push(setTimeout(() => setPhase(3), 3500));  // VectorDB → Retriever + Web App → Retriever
+      timers.push(setTimeout(() => setPhase(4), 5000));  // Retriever → LLM (Prompt + Context)
+      timers.push(setTimeout(() => setPhase(5), 6500));  // LLM → Web App (Answer)
       timers.push(setTimeout(() => {
         setPhase(0);
         setTimeout(runAnimation, 500);
@@ -121,7 +155,7 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-[min(920px,calc(100vw-3rem))] h-[min(580px,calc(100vh-3rem))] bg-card border border-border rounded-2xl overflow-hidden"
+            className="relative w-[min(920px,calc(100vw-3rem))] h-[min(620px,calc(100vh-3rem))] bg-card border border-border rounded-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
@@ -175,14 +209,14 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
               </div>
 
               {/* RAG KNOWLEDGE BASE */}
-              <div className="border border-primary/30 rounded-lg p-3 bg-primary/5 flex-1 flex flex-col justify-center">
+              <div className="border border-primary/30 rounded-lg p-4 bg-primary/5 flex-1 flex flex-col">
                 <span className="text-[10px] text-primary font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-3 justify-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                   RAG Knowledge Base
                 </span>
 
-                <div className="flex items-center justify-center gap-6">
-                  {/* Vector DB */}
+                <div className="flex-1 flex flex-col items-center justify-center">
+                  {/* VectorDB */}
                   <motion.div
                     animate={{
                       boxShadow: phase >= 2 && phase < 5
@@ -200,7 +234,9 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
                   </motion.div>
 
                   {/* Arrow VectorDB → Retriever */}
-                  <AnimatedArrow active={phase >= 3 && phase < 5} width={40} />
+                  <div className="my-1">
+                    <AnimatedVerticalArrow active={phase >= 3 && phase < 5} height={20} />
+                  </div>
 
                   {/* Retriever */}
                   <motion.div
@@ -217,21 +253,101 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
                     <span className="text-[8px] text-muted-foreground">Semantic Search</span>
                   </motion.div>
                 </div>
-
-                {/* Prompt + Context label */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: phase >= 4 ? 1 : 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="text-[10px] text-primary/70 text-center mt-2"
-                >
-                  Prompt + Context →
-                </motion.div>
               </div>
 
-              {/* Arrow from RAG to Query */}
-              <div className="flex justify-center">
-                <AnimatedVerticalArrow active={phase >= 3 && phase < 5} />
+              {/* Connector area: Web App ↗ Retriever and Retriever ↘ LLM */}
+              <div className="flex justify-center py-0.5">
+                <svg width="500" height="36" viewBox="0 0 500 36" className="overflow-visible">
+                  {/* Left diagonal: Web App (bottom-left) → Retriever (top-center) */}
+                  <path
+                    d="M140 36 L250 4"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="1.5"
+                    fill="none"
+                    strokeLinecap="round"
+                    opacity={phase >= 3 ? 1 : 0.3}
+                  />
+                  {/* Arrowhead for left diagonal (pointing up to Retriever) */}
+                  <path
+                    d="M255 14 L250 2 L243 12"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="1.5"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    opacity={phase >= 3 ? 1 : 0.3}
+                  />
+                  {/* Traveling dot: Web App → Retriever */}
+                  {phase >= 3 && phase < 5 && (
+                    <motion.circle
+                      r="2.5"
+                      fill="hsl(var(--primary))"
+                      initial={{ cx: 140, cy: 36, opacity: 0 }}
+                      animate={{
+                        cx: [140, 250],
+                        cy: [36, 4],
+                        opacity: [0, 1, 1, 0]
+                      }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  )}
+
+                  {/* Right diagonal: Retriever (top-center) → LLM (bottom-right) */}
+                  <path
+                    d="M250 4 L360 36"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="1.5"
+                    fill="none"
+                    strokeLinecap="round"
+                    opacity={phase >= 4 ? 1 : 0.3}
+                  />
+                  {/* Arrowhead for right diagonal (pointing down to LLM) */}
+                  <path
+                    d="M353 24 L362 38 L367 26"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="1.5"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    opacity={phase >= 4 ? 1 : 0.3}
+                  />
+                  {/* Traveling dot: Retriever → LLM */}
+                  {phase >= 4 && phase < 5 && (
+                    <motion.circle
+                      r="2.5"
+                      fill="hsl(var(--primary))"
+                      initial={{ cx: 250, cy: 4, opacity: 0 }}
+                      animate={{
+                        cx: [250, 360],
+                        cy: [4, 36],
+                        opacity: [0, 1, 1, 0]
+                      }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  )}
+
+                  {/* "Prompt + Context" label on right diagonal */}
+                  {phase >= 4 && (
+                    <text
+                      x="320"
+                      y="14"
+                      fill="hsl(var(--primary) / 0.6)"
+                      fontSize="9"
+                      fontFamily="inherit"
+                      textAnchor="middle"
+                    >
+                      Prompt + Context
+                    </text>
+                  )}
+                </svg>
               </div>
 
               {/* QUERY PIPELINE */}
@@ -241,103 +357,63 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
                   Query Pipeline
                 </span>
 
-                <div className="flex items-center justify-center gap-4">
-                  {/* Query */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-10 h-10 rounded-lg bg-muted/40 border border-border/50 flex items-center justify-center">
-                      <PenLine className="w-4 h-4 text-muted-foreground" />
+                <div className="flex items-center justify-center">
+                  {/* Left group: Query → Web App */}
+                  <div className="flex items-center gap-3" style={{ marginRight: '100px' }}>
+                    {/* Query */}
+                    <div className="flex flex-col items-center">
+                      <div className="w-10 h-10 rounded-lg bg-muted/40 border border-border/50 flex items-center justify-center">
+                        <PenLine className="w-4 h-4 text-muted-foreground" />
+                      </div>
+                      <span className="text-[10px] text-foreground font-medium mt-1">Query</span>
                     </div>
-                    <span className="text-[10px] text-foreground font-medium mt-1">Query</span>
+
+                    {/* Arrow Query → Web App */}
+                    <AnimatedArrow active={phase >= 2 && phase < 5} />
+
+                    {/* Web App */}
+                    <div className="flex flex-col items-center">
+                      <div className="w-10 h-10 rounded-lg bg-muted/40 border border-border/50 flex items-center justify-center">
+                        <Monitor className="w-4 h-4 text-muted-foreground" />
+                      </div>
+                      <span className="text-[10px] text-foreground font-medium mt-1">Web App</span>
+                    </div>
                   </div>
 
-                  {/* Arrow Query → Web App */}
-                  <AnimatedArrow active={phase >= 2 && phase < 5} />
+                  {/* Right group: LLM with answer arrow back */}
+                  <div className="flex items-center gap-3">
+                    {/* Answer arrow (LLM → Web App) */}
+                    <AnimatedReverseArrow active={phase >= 5} width={40} />
 
-                  {/* Web App */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-10 h-10 rounded-lg bg-muted/40 border border-border/50 flex items-center justify-center">
-                      <Monitor className="w-4 h-4 text-muted-foreground" />
-                    </div>
-                    <span className="text-[10px] text-foreground font-medium mt-1">Web App</span>
+                    {/* LLM */}
+                    <motion.div
+                      animate={{
+                        scale: phase >= 4 && phase < 5 ? [1, 1.08, 1] : 1,
+                        boxShadow: phase >= 4 && phase < 5
+                          ? ['0 0 0px hsl(var(--primary) / 0)', '0 0 15px hsl(var(--primary) / 0.4)', '0 0 0px hsl(var(--primary) / 0)']
+                          : 'none'
+                      }}
+                      transition={{ duration: 1, repeat: phase >= 4 && phase < 5 ? Infinity : 0 }}
+                      className="flex flex-col items-center"
+                    >
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/50 flex items-center justify-center">
+                        <Brain className="w-5 h-5 text-primary" />
+                      </div>
+                      <span className="text-[10px] font-bold text-primary mt-1">LLM</span>
+                    </motion.div>
                   </div>
-
-                  {/* Bidirectional arrow Web App ↔ LLM */}
-                  <svg width="40" height="16" viewBox="0 0 40 16">
-                    <path
-                      d="M0 8 L32 8"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth="1.5"
-                      fill="none"
-                      strokeLinecap="round"
-                      opacity={phase >= 4 ? 1 : 0.3}
-                    />
-                    <path
-                      d="M6 3 L0 8 L6 13"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth="1.5"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      opacity={phase >= 5 ? 1 : 0.3}
-                    />
-                    <path
-                      d="M26 3 L32 8 L26 13"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth="1.5"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      opacity={phase >= 4 ? 1 : 0.3}
-                    />
-                    {/* Dot going right: Web App → LLM (Prompt+Context) */}
-                    {phase >= 4 && phase < 5 && (
-                      <motion.circle
-                        r="2.5"
-                        cy="8"
-                        fill="hsl(var(--primary))"
-                        initial={{ cx: 0, opacity: 0 }}
-                        animate={{ cx: [0, 32], opacity: [0, 1, 1, 0] }}
-                        transition={{
-                          duration: 1.2,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      />
-                    )}
-                    {/* Dot going left: LLM → Web App (Answer) */}
-                    {phase >= 5 && (
-                      <motion.circle
-                        r="2.5"
-                        cy="8"
-                        fill="hsl(var(--primary))"
-                        initial={{ cx: 32, opacity: 0 }}
-                        animate={{ cx: [32, 0], opacity: [0, 1, 1, 0] }}
-                        transition={{
-                          duration: 1.2,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      />
-                    )}
-                  </svg>
-
-                  {/* LLM */}
-                  <motion.div
-                    animate={{
-                      scale: phase >= 4 && phase < 5 ? [1, 1.08, 1] : 1,
-                      boxShadow: phase >= 4 && phase < 5
-                        ? ['0 0 0px hsl(var(--primary) / 0)', '0 0 15px hsl(var(--primary) / 0.4)', '0 0 0px hsl(var(--primary) / 0)']
-                        : 'none'
-                    }}
-                    transition={{ duration: 1, repeat: phase >= 4 && phase < 5 ? Infinity : 0 }}
-                    className="flex flex-col items-center"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/50 flex items-center justify-center">
-                      <Brain className="w-5 h-5 text-primary" />
-                    </div>
-                    <span className="text-[10px] font-bold text-primary mt-1">LLM</span>
-                  </motion.div>
                 </div>
+
+                {/* Answer label */}
+                {phase >= 5 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-[10px] text-emerald-400/70 text-center mt-2"
+                  >
+                    ← Cited Answer
+                  </motion.div>
+                )}
               </div>
             </div>
 
