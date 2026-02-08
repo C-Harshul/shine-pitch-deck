@@ -109,18 +109,8 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
               {/* Left: Incoming Documents from Sources */}
               <div className="flex flex-col gap-3 w-[180px]">
                 {documentSources.map((source, i) => (
-                  <motion.div
+                  <div
                     key={i}
-                    initial={{ x: -120, opacity: 0 }}
-                    animate={{
-                      x: phase >= 1 ? 0 : -120,
-                      opacity: phase >= 1 ? 1 : 0,
-                    }}
-                    transition={{
-                      duration: 0.8,
-                      delay: i * 0.3,
-                      ease: "easeOut"
-                    }}
                     className="flex items-center gap-2 p-2.5 bg-muted/30 border border-border/50 rounded-lg"
                   >
                     <div className={`p-1.5 rounded bg-muted/50 ${source.sourceColor}`}>
@@ -133,11 +123,11 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                         <span className="text-[10px] text-muted-foreground">via {source.sourceName}</span>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
-              {/* Simple Arrows flowing to brain */}
+              {/* Animated Arrows flowing to brain */}
               <div className="flex flex-col gap-6 items-center justify-center w-[60px]">
                 {[0, 1, 2].map((i) => (
                   <motion.svg
@@ -145,10 +135,11 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                     width="50"
                     height="16"
                     viewBox="0 0 50 16"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: phase >= 2 ? 1 : 0.3 }}
+                    initial={{ opacity: 0.3 }}
+                    animate={{ opacity: phase >= 1 ? 1 : 0.3 }}
                     transition={{ duration: 0.5, delay: i * 0.15 }}
                   >
+                    {/* Static arrow line */}
                     <path
                       d="M0 8 L40 8 M32 2 L42 8 L32 14"
                       stroke="hsl(var(--primary))"
@@ -157,6 +148,22 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
+                    {/* Animated traveling dot */}
+                    {phase >= 1 && phase < 4 && (
+                      <motion.circle
+                        r="3"
+                        cy="8"
+                        fill="hsl(var(--primary))"
+                        initial={{ cx: 0, opacity: 0 }}
+                        animate={{ cx: [0, 40], opacity: [0, 1, 1, 0] }}
+                        transition={{
+                          duration: 1.2,
+                          delay: i * 0.3,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    )}
                   </motion.svg>
                 ))}
               </div>
