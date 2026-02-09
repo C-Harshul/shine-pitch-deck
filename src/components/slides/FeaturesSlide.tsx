@@ -3,6 +3,7 @@ import { useState } from "react";
 import Slide from "@/components/Slide";
 import DocumentProcessingAnimation from "@/components/DocumentProcessingAnimation";
 import ResearchAnimation from "@/components/ResearchAnimation";
+import FlaggingAnimation from "@/components/FlaggingAnimation";
 
 const features = [
   {
@@ -18,8 +19,8 @@ const features = [
     title: "Flag",
     subtitle: "Your rules. Enforced in real-time.",
     description: "Define standards once. Numina catches issues before they become audit problems.",
-    clickable: false,
-    animationType: null
+    clickable: true,
+    animationType: "flag"
   },
   {
     icon: Search,
@@ -34,6 +35,7 @@ const features = [
 const FeaturesSlide = () => {
   const [showReconcileAnimation, setShowReconcileAnimation] = useState(false);
   const [showResearchAnimation, setShowResearchAnimation] = useState(false);
+  const [showFlaggingAnimation, setShowFlaggingAnimation] = useState(false);
 
   const handleCardClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
@@ -41,6 +43,8 @@ const FeaturesSlide = () => {
       setShowReconcileAnimation(true);
     } else if (features[index].animationType === "research") {
       setShowResearchAnimation(true);
+    } else if (features[index].animationType === "flag") {
+      setShowFlaggingAnimation(true);
     }
   };
 
@@ -88,6 +92,11 @@ const FeaturesSlide = () => {
       <ResearchAnimation
         isOpen={showResearchAnimation}
         onClose={() => setShowResearchAnimation(false)}
+      />
+
+      <FlaggingAnimation
+        isOpen={showFlaggingAnimation}
+        onClose={() => setShowFlaggingAnimation(false)}
       />
     </Slide>
   );
