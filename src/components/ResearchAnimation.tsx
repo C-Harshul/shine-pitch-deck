@@ -1,16 +1,16 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, FileText, Database, Filter, Brain, Monitor, PenLine, Zap, HardDrive, Scissors, Cpu } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface ResearchAnimationProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// Reusable horizontal arrow with traveling dot
-const AnimatedArrow = ({ active, delay = 0, width = 36, label }: { active: boolean; delay?: number; width?: number; label?: string }) => (
-  <div className="flex flex-col items-center">
-    <svg width={width} height="16" viewBox={`0 0 ${width} 16`}>
+// Reusable horizontal arrow with traveling dot - centered between icons
+const AnimatedArrow = ({ active, delay = 0, width = 36, label, repeat = Infinity }: { active: boolean; delay?: number; width?: number; label?: string; repeat?: number }) => (
+  <div className="flex items-center justify-center" style={{ height: '48px' }}>
+    <svg width={width} height="16" viewBox={`0 0 ${width} 16`} className="overflow-visible">
       <path
         d={`M0 8 L${width - 8} 8 M${width - 14} 3 L${width - 6} 8 L${width - 14} 13`}
         stroke="hsl(var(--primary))"
@@ -18,19 +18,20 @@ const AnimatedArrow = ({ active, delay = 0, width = 36, label }: { active: boole
         fill="none"
         strokeLinecap="round"
         strokeLinejoin="round"
-        opacity={active ? 1 : 0.3}
+        opacity={1}
       />
       {active && (
         <motion.circle
+          key="arrow-dot"
           r="2.5"
           cy="8"
           fill="hsl(var(--primary))"
           initial={{ cx: 0, opacity: 0 }}
           animate={{ cx: [0, width - 8], opacity: [0, 1, 1, 0] }}
           transition={{
-            duration: 1,
+            duration: 2,
             delay,
-            repeat: Infinity,
+            repeat,
             ease: "easeInOut"
           }}
         />
@@ -52,17 +53,18 @@ const AnimatedVerticalArrow = ({ active, height = 24 }: { active: boolean; heigh
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"
-      opacity={active ? 1 : 0.3}
+      opacity={1}
     />
     {active && (
       <motion.circle
+        key="vertical-arrow-dot"
         r="2.5"
         cx="10"
         fill="hsl(var(--primary))"
         initial={{ cy: 0, opacity: 0 }}
         animate={{ cy: [0, height - 8], opacity: [0, 1, 1, 0] }}
         transition={{
-          duration: 1,
+          duration: 2,
           repeat: Infinity,
           ease: "easeInOut"
         }}
@@ -71,67 +73,129 @@ const AnimatedVerticalArrow = ({ active, height = 24 }: { active: boolean; heigh
   </svg>
 );
 
-// Reverse horizontal arrow (right to left) with traveling dot
-const AnimatedReverseArrow = ({ active, width = 36 }: { active: boolean; width?: number }) => (
-  <svg width={width} height="16" viewBox={`0 0 ${width} 16`}>
-    <path
-      d={`M${width} 8 L8 8 M14 3 L6 8 L14 13`}
-      stroke="hsl(var(--primary))"
-      strokeWidth="1.5"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      opacity={active ? 1 : 0.3}
-    />
-    {active && (
-      <motion.circle
-        r="2.5"
-        cy="8"
-        fill="hsl(var(--primary))"
-        initial={{ cx: width, opacity: 0 }}
-        animate={{ cx: [width, 8], opacity: [0, 1, 1, 0] }}
-        transition={{
-          duration: 1,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
+// Reverse horizontal arrow (right to left) with traveling dot - centered between icons
+const AnimatedReverseArrow = ({ active, width = 36, repeat = 0 }: { active: boolean; width?: number; repeat?: number }) => (
+  <div className="flex items-center justify-center" style={{ height: '48px' }}>
+    <svg width={width} height="16" viewBox={`0 0 ${width} 16`} className="overflow-visible">
+      <path
+        d={`M${width} 8 L8 8 M14 3 L6 8 L14 13`}
+        stroke="hsl(var(--primary))"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={1}
       />
-    )}
-  </svg>
+      {active && (
+        <motion.circle
+          key="reverse-arrow-dot"
+          r="2.5"
+          cy="8"
+          fill="hsl(var(--primary))"
+          initial={{ cx: width, opacity: 0 }}
+          animate={{ cx: [width, 8], opacity: [0, 1, 1, 0] }}
+          transition={{
+            duration: 2,
+            repeat,
+            ease: "easeInOut"
+          }}
+        />
+      )}
+    </svg>
+  </div>
+);
+
+// Reverse vertical arrow (bottom to top) with traveling dot - for Web App → Retriever
+const AnimatedReverseVerticalArrow = ({ active, height = 32, repeat = 0 }: { active: boolean; height?: number; repeat?: number }) => (
+  <div className="flex items-center justify-center">
+    <svg width="20" height={height} viewBox={`0 0 20 ${height}`}>
+      <path
+        d={`M10 ${height} L10 8 M5 12 L10 4 L15 12`}
+        stroke="hsl(var(--primary))"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={1}
+      />
+      {active && (
+        <motion.circle
+          key="reverse-vertical-arrow-dot"
+          r="2.5"
+          cx="10"
+          fill="hsl(var(--primary))"
+          initial={{ cy: height, opacity: 0 }}
+          animate={{ cy: [height, 8], opacity: [0, 1, 1, 0] }}
+          transition={{
+            duration: 2,
+            repeat,
+            ease: "easeInOut"
+          }}
+        />
+      )}
+    </svg>
+  </div>
 );
 
 const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
   const [phase, setPhase] = useState(0);
+  const [queryPipelineHighlighted, setQueryPipelineHighlighted] = useState(false);
+  const [ingestionPhase, setIngestionPhase] = useState(0);
+  const [ingestionPipelineHighlighted, setIngestionPipelineHighlighted] = useState(false);
+  const animationTimersRef = useRef<NodeJS.Timeout[]>([]);
+  const ingestionTimersRef = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
     if (!isOpen) {
       setPhase(0);
+      setQueryPipelineHighlighted(false);
+      setIngestionPhase(0);
+      setIngestionPipelineHighlighted(false);
+      // Clear any running animations
+      animationTimersRef.current.forEach(t => clearTimeout(t));
+      animationTimersRef.current = [];
+      ingestionTimersRef.current.forEach(t => clearTimeout(t));
+      ingestionTimersRef.current = [];
       return;
     }
-
-    const runAnimation = () => {
-      setPhase(1); // Ingestion arrows animate
-
-      const timers: NodeJS.Timeout[] = [];
-
-      timers.push(setTimeout(() => setPhase(2), 2000));  // Data to VectorDB + Query → Web App
-      timers.push(setTimeout(() => setPhase(3), 3500));  // VectorDB → Retriever + Web App → Retriever
-      timers.push(setTimeout(() => setPhase(4), 5000));  // Retriever → LLM (Prompt + Context)
-      timers.push(setTimeout(() => setPhase(5), 6500));  // LLM → Web App (Answer)
-      timers.push(setTimeout(() => {
-        setPhase(0);
-        setTimeout(runAnimation, 500);
-      }, 9000));
-
-      return timers;
-    };
-
-    const timers = runAnimation();
-
-    return () => {
-      timers.forEach(t => clearTimeout(t));
-    };
   }, [isOpen]);
+
+  const startQueryAnimation = () => {
+    if (queryPipelineHighlighted) return; // Prevent multiple clicks
+    
+    // Clear any existing timers
+    animationTimersRef.current.forEach(t => clearTimeout(t));
+    animationTimersRef.current = [];
+    
+    setQueryPipelineHighlighted(true);
+    setPhase(0);
+
+    // Animation timing - Green (Query Pipeline) and Yellow (RAG) animate together
+    // Phase 1: Query → Web App
+    animationTimersRef.current.push(setTimeout(() => setPhase(1), 0));
+    
+    // Phase 2: Web App → Retriever (vertical up)
+    animationTimersRef.current.push(setTimeout(() => setPhase(2), 3000));
+    
+    // Phase 3: Retriever → VectorDB (cosine match - highlight VectorDB)
+    animationTimersRef.current.push(setTimeout(() => setPhase(3), 4500));
+    
+    // Phase 4: VectorDB → Retriever (context retrieved)
+    animationTimersRef.current.push(setTimeout(() => setPhase(4), 9000));
+    
+    // Phase 5: Retriever → LLM (L-shaped with prompt + context)
+    animationTimersRef.current.push(setTimeout(() => setPhase(5), 13500));
+    
+    // Phase 6: LLM → Web App (answer)
+    animationTimersRef.current.push(setTimeout(() => setPhase(6), 18000));
+    
+    // Reset after animation completes
+    animationTimersRef.current.push(setTimeout(() => {
+      setPhase(0);
+      setQueryPipelineHighlighted(false);
+      animationTimersRef.current = [];
+    }, 22500));
+  };
 
   const ingestionSteps = [
     { icon: FileText, label: "Tax Docs", sublabel: "PDFs" },
@@ -140,6 +204,40 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
     { icon: Scissors, label: "Chunking", sublabel: "Split" },
     { icon: Cpu, label: "Embed", sublabel: "Vectors" },
   ];
+
+  const startIngestionAnimation = () => {
+    if (ingestionPipelineHighlighted) return; // Prevent multiple clicks
+    
+    // Clear any existing timers
+    ingestionTimersRef.current.forEach(t => clearTimeout(t));
+    ingestionTimersRef.current = [];
+    
+    setIngestionPipelineHighlighted(true);
+    setIngestionPhase(0);
+
+    // Animation timing - one arrow at a time
+    // Phase 1: Tax Docs → S3 Store
+    ingestionTimersRef.current.push(setTimeout(() => setIngestionPhase(1), 0));
+    
+    // Phase 2: S3 Store → Lambda
+    ingestionTimersRef.current.push(setTimeout(() => setIngestionPhase(2), 3000));
+    
+    // Phase 3: Lambda → Chunking
+    ingestionTimersRef.current.push(setTimeout(() => setIngestionPhase(3), 6000));
+    
+    // Phase 4: Chunking → Embed
+    ingestionTimersRef.current.push(setTimeout(() => setIngestionPhase(4), 9000));
+    
+    // Phase 5: Embed → VectorDB
+    ingestionTimersRef.current.push(setTimeout(() => setIngestionPhase(5), 12000));
+    
+    // Reset after animation completes
+    ingestionTimersRef.current.push(setTimeout(() => {
+      setIngestionPhase(0);
+      setIngestionPipelineHighlighted(false);
+      ingestionTimersRef.current = [];
+    }, 15000));
+  };
 
   return (
     <AnimatePresence>
@@ -155,7 +253,7 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-[min(920px,calc(100vw-3rem))] h-[min(620px,calc(100vh-3rem))] bg-card border border-border rounded-2xl overflow-hidden"
+            className="relative w-[min(920px,calc(100vw-3rem))] h-[min(720px,calc(100vh-3rem))] bg-card border border-border rounded-2xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
@@ -175,237 +273,462 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
             </div>
 
             {/* Main container */}
-            <div className="relative w-full h-full flex flex-col px-6 py-5 gap-1.5">
+            <div className="relative w-full h-full flex flex-col items-center px-4 py-5 gap-1.5">
 
               {/* INGESTION PIPELINE */}
-              <div className="border border-sky-500/30 rounded-lg p-3 bg-sky-500/5">
-                <span className="text-[10px] text-sky-400 font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-3">
+              <motion.div 
+                className={`border rounded-lg p-2 cursor-pointer transition-all w-fit ${
+                  ingestionPipelineHighlighted 
+                    ? 'border-sky-500 bg-sky-500/20 shadow-lg shadow-sky-500/20' 
+                    : 'border-sky-500/30 bg-sky-500/5 hover:bg-sky-500/10'
+                }`}
+                onClick={startIngestionAnimation}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+              >
+                <span className="text-[10px] text-sky-400 font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-sky-400" />
                   Ingestion Pipeline
                 </span>
 
-                <div className="flex items-center justify-between px-2">
+                <div className="flex items-center justify-center">
                   {ingestionSteps.map((step, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <div className="flex flex-col items-center">
-                        <div className="w-10 h-10 rounded-lg bg-muted/40 border border-border/50 flex items-center justify-center">
-                          <step.icon className="w-4 h-4 text-muted-foreground" />
+                    <div key={i} className="flex items-center">
+                      <div className={`flex flex-col items-center ${i === ingestionSteps.length - 1 ? 'relative' : ''}`}>
+                        <div 
+                          className={`w-12 h-12 rounded-lg bg-muted/40 flex items-center justify-center m-2 transition-all ${
+                            ingestionPipelineHighlighted && ingestionPhase > 0 && ((ingestionPhase === i + 1 || ingestionPhase === i) || (ingestionPhase === 5 && i === 4))
+                              ? 'border border-sky-500 shadow-[0_0_15px_rgba(14,165,233,0.4)]'
+                              : 'border border-transparent'
+                          }`}
+                        >
+                          <step.icon className="w-5 h-5 text-muted-foreground" />
                         </div>
                         <span className="text-[10px] text-foreground font-medium mt-1">{step.label}</span>
                         <span className="text-[8px] text-muted-foreground">{step.sublabel}</span>
+                        
+                        {/* Arrow from Embed (right side) → VectorDB - always visible */}
+                        {i === ingestionSteps.length - 1 && (
+                          <div className="absolute right-[-300px] top-1/2 -translate-y-1/2" style={{ zIndex: 100, pointerEvents: 'none' }}>
+                            <svg width="300" height="400" viewBox="0 0 300 400" style={{ overflow: 'visible' }}>
+                              {/* Z-shaped path: horizontal right, then vertical down, then horizontal left to VectorDB - always visible */}
+                              <path
+                                d="M 0 190 L 70 190 L 70 360 L -200 360"
+                                stroke="hsl(var(--primary))"
+                                strokeWidth="2.5"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                opacity={1}
+                              />
+                              {/* Arrowhead pointing left to VectorDB */}
+                              <path
+                                d="M -190 355 L -200 360 L -190 365"
+                                stroke="hsl(var(--primary))"
+                                strokeWidth="2.5"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                opacity={1}
+                              />
+                              {/* Traveling dot - only during ingestion phase 5 (after Chunking → Embed completes) */}
+                              {ingestionPipelineHighlighted && ingestionPhase === 5 && (
+                                <motion.circle
+                                  key="embed-vectordb-dot"
+                                  r="3.5"
+                                  fill="hsl(var(--primary))"
+                                  initial={{ cx: 0, cy: 190, opacity: 0 }}
+                                  animate={{
+                                    cx: [0, 70, 70, -200, -200],
+                                    cy: [190, 190, 360, 360, 360],
+                                    opacity: [0, 1, 1, 1, 0]
+                                  }}
+                                  transition={{
+                                    duration: 2,
+                                    times: [0, 0.25, 0.5, 0.95, 1],
+                                    repeat: 0,
+                                    ease: "easeInOut"
+                                  }}
+                                />
+                              )}
+                              {/* "Vectorised" label - only when arrow is active (phase 5) */}
+                              {ingestionPipelineHighlighted && ingestionPhase === 5 && (
+                                <motion.text
+                                  x="50"
+                                  y="350"
+                                  fill="hsl(38, 92%, 50%)"
+                                  fontSize="11"
+                                  fontFamily="inherit"
+                                  textAnchor="end"
+                                  fontWeight="500"
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  transition={{ duration: 0.3 }}
+                                >
+                                  Vectorised
+                                </motion.text>
+                              )}
+                            </svg>
+                          </div>
+                        )}
                       </div>
 
                       {i < ingestionSteps.length - 1 && (
-                        <AnimatedArrow active={phase >= 1 && phase < 5} delay={i * 0.2} />
+                        <div className="flex items-center justify-center px-2" style={{ height: '48px' }}>
+                          <AnimatedArrow active={ingestionPipelineHighlighted && ingestionPhase === i + 1} delay={0} width={28} repeat={0} />
+                        </div>
                       )}
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Arrow from Ingestion to RAG */}
-              <div className="flex justify-center">
-                <AnimatedVerticalArrow active={phase >= 2 && phase < 5} />
+              {/* Arrow from Ingestion to RAG - Diagonal from Embed to VectorDB */}
+              {!queryPipelineHighlighted && (
+              <div className="flex justify-center relative h-6">
+                <svg width="100%" height="100%" viewBox="0 0 920 24" className="absolute inset-0 overflow-visible" preserveAspectRatio="none">
+                  {/* Diagonal path from Embed (right side, ~85% = 782px) to VectorDB (center, 50% = 460px) */}
+                  <path
+                    d="M782 0 L460 24"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="1.5"
+                    fill="none"
+                    strokeLinecap="round"
+                    opacity={1}
+                  />
+                  {/* Arrowhead pointing down to VectorDB */}
+                  <path
+                    d="M465 20 L460 24 L455 20"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="1.5"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    opacity={1}
+                  />
+                </svg>
               </div>
+              )}
 
               {/* RAG KNOWLEDGE BASE */}
-              <div className="border border-primary/30 rounded-lg p-4 bg-primary/5 flex-1 flex flex-col">
-                <span className="text-[10px] text-primary font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-3 justify-center">
+              <div className="border border-primary/30 rounded-lg p-2 bg-primary/5 w-fit flex flex-col">
+                <span className="text-[10px] text-primary font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-2 justify-center">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                   RAG Knowledge Base
                 </span>
 
                 <div className="flex-1 flex flex-col items-center justify-center">
                   {/* VectorDB */}
-                  <motion.div
-                    animate={{
-                      boxShadow: phase >= 2 && phase < 5
-                        ? ['0 0 0px hsl(var(--primary) / 0)', '0 0 15px hsl(var(--primary) / 0.4)', '0 0 0px hsl(var(--primary) / 0)']
-                        : 'none'
-                    }}
-                    transition={{ duration: 1.5, repeat: phase >= 2 && phase < 5 ? Infinity : 0 }}
-                    className="flex flex-col items-center"
-                  >
-                    <div className="w-12 h-12 rounded-lg bg-muted/40 border-2 border-primary/40 flex items-center justify-center">
+                  <div className="flex flex-col items-center">
+                    <div 
+                      className={`w-12 h-12 rounded-lg bg-muted/40 flex items-center justify-center m-2 transition-all ${
+                        queryPipelineHighlighted && (phase === 3 || phase === 4)
+                          ? 'border border-primary shadow-[0_0_15px_hsl(var(--primary)/0.4)]'
+                          : ingestionPipelineHighlighted && ingestionPhase === 5
+                          ? 'border border-primary shadow-[0_0_15px_hsl(var(--primary)/0.4)]'
+                          : 'border border-transparent'
+                      }`}
+                    >
                       <Database className="w-5 h-5 text-primary" />
                     </div>
                     <span className="text-xs text-foreground font-medium mt-1">VectorDB</span>
                     <span className="text-[8px] text-muted-foreground">Tax Knowledge</span>
-                  </motion.div>
+                  </div>
 
-                  {/* Arrow VectorDB → Retriever */}
+                  {/* Bidirectional arrow Retriever ↔ VectorDB */}
                   <div className="my-1">
-                    <AnimatedVerticalArrow active={phase >= 3 && phase < 5} height={20} />
+                    <svg width="20" height="40" viewBox="0 0 20 40">
+                      {/* Vertical line connecting both */}
+                      <path
+                        d="M10 4 L10 36"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth="2"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        opacity={1}
+                      />
+                      {/* Upward arrowhead (Retriever → VectorDB) */}
+                      <path
+                        d="M5 12 L10 4 L15 12"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth="2"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        opacity={1}
+                      />
+                      {/* Downward arrowhead (VectorDB → Retriever) */}
+                      <path
+                        d="M5 28 L10 36 L15 28"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth="2"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        opacity={1}
+                      />
+                      {/* Traveling dot: Retriever → VectorDB (upward) */}
+                      {queryPipelineHighlighted && phase >= 3 && phase < 4 && (
+                        <motion.circle
+                          key="retriever-vectordb-up"
+                          r="2.5"
+                          cx="10"
+                          fill="hsl(var(--primary))"
+                          initial={{ cy: 36, opacity: 0 }}
+                          animate={{
+                            cy: [36, 8],
+                            opacity: [0, 1, 1, 0]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: 0,
+                            ease: "easeInOut"
+                          }}
+                        />
+                      )}
+                      {/* Traveling dot: VectorDB → Retriever (downward) */}
+                      {queryPipelineHighlighted && phase >= 4 && phase < 7 && (
+                        <motion.circle
+                          key="vectordb-retriever-down"
+                          r="2.5"
+                          cx="10"
+                          fill="hsl(var(--primary))"
+                          initial={{ cy: 4, opacity: 0 }}
+                          animate={{
+                            cy: [4, 32],
+                            opacity: [0, 1, 1, 0]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: 0,
+                            ease: "easeInOut"
+                          }}
+                        />
+                      )}
+                    </svg>
                   </div>
 
                   {/* Retriever */}
-                  <motion.div
-                    animate={{
-                      scale: phase >= 3 && phase < 5 ? [1, 1.05, 1] : 1
-                    }}
-                    transition={{ duration: 1, repeat: phase >= 3 && phase < 5 ? Infinity : 0 }}
-                    className="flex flex-col items-center"
-                  >
-                    <div className="w-12 h-12 rounded-lg bg-muted/40 border-2 border-primary/40 flex items-center justify-center">
+                  <div className="flex flex-col items-center relative">
+                    <div 
+                      className={`w-12 h-12 rounded-lg bg-muted/40 flex items-center justify-center m-2 transition-all ${
+                        queryPipelineHighlighted && (phase === 2 || phase === 3 || phase === 4 || phase === 5)
+                          ? 'border border-primary shadow-[0_0_15px_hsl(var(--primary)/0.4)]'
+                          : 'border border-transparent'
+                      }`}
+                    >
                       <Filter className="w-5 h-5 text-primary" />
                     </div>
                     <span className="text-xs text-foreground font-medium mt-1">Retriever</span>
                     <span className="text-[8px] text-muted-foreground">Semantic Search</span>
-                  </motion.div>
+                    
+                    {/* Arrow from Retriever right side → LLM - always visible */}
+                    <div className="absolute right-[-300px] top-1/2 -translate-y-1/2" style={{ zIndex: 100, pointerEvents: 'none' }}>
+                      <svg width="300" height="200" viewBox="0 0 300 200" style={{ overflow: 'visible' }}>
+                        {/* L-shaped path: horizontal right, then vertical down - always visible */}
+                        <path
+                          d="M 0 80 L 70 80 L 70 220"
+                          stroke="hsl(var(--primary))"
+                          strokeWidth="2.5"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          opacity={1}
+                        />
+                        {/* Arrowhead pointing down - always visible */}
+                        <path
+                          d="M 65 210 L 70 220 L 75 210"
+                          stroke="hsl(var(--primary))"
+                          strokeWidth="2.5"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          opacity={1}
+                        />
+                        {/* Traveling dot - only during phase 5-6 */}
+                        {queryPipelineHighlighted && phase >= 5 && phase < 6 && (
+                          <motion.circle
+                            key="retriever-llm-dot"
+                            r="3.5"
+                            fill="hsl(var(--primary))"
+                            initial={{ cx: 0, cy: 80, opacity: 0 }}
+                            animate={{
+                              cx: [0, 70, 70],
+                              cy: [80, 80, 200],
+                              opacity: [0, 1, 1, 0]
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: 0,
+                              ease: "easeInOut"
+                            }}
+                          />
+                        )}
+                        {/* "Prompt + Context" label - only during phase 5-6 */}
+                        {queryPipelineHighlighted && phase >= 5 && phase < 6 && (
+                          <text
+                            x="42"
+                            y="75"
+                            fill="hsl(var(--primary))"
+                            fontSize="11"
+                            fontFamily="inherit"
+                            textAnchor="middle"
+                            fontWeight="500"
+                          >
+                            Prompt + Context
+                          </text>
+                        )}
+                      </svg>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+
+                {/* Connector area: Web App ↑ Retriever and Retriever → Web App → LLM */}
+              <div className="flex justify-center items-center py-2 relative" style={{ minHeight: '64px' }}>
+                {/* Vertical arrow: Web App → Retriever - centered and visible (bottom to top) */}
+                <div className="flex flex-col items-center justify-center z-10">
+                  <AnimatedReverseVerticalArrow 
+                    active={queryPipelineHighlighted && phase >= 2 && phase < 3} 
+                    height={40}
+                    repeat={0}
+                  />
+                </div>
+                
+                {/* Arrow from Retriever → Web App (with Prompt + Context) */}
+                <div className="absolute inset-0" style={{ zIndex: 50, pointerEvents: 'none', overflow: 'visible' }}>
+                  <svg 
+                    width="100%" 
+                    height="100%" 
+                    className="absolute"
+                    style={{ top: 0, left: 0, overflow: 'visible' }}
+                    viewBox="0 0 920 64"
+                    preserveAspectRatio="none"
+                  >
+                    {/* Vertical arrow: Retriever → Web App (downward, centered) */}
+                    <path
+                      d="M 460 12 L 460 52"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth="2.5"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    {/* Arrowhead pointing down to Web App */}
+                    <path
+                      d="M 455 47 L 460 52 L 465 47"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth="2.5"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    {/* Traveling dot: Retriever → Web App */}
+                    {queryPipelineHighlighted && phase >= 5 && phase < 6 && (
+                      <motion.circle
+                        key="retriever-webapp-dot"
+                        r="3.5"
+                        fill="hsl(var(--primary))"
+                        initial={{ cx: 460, cy: 12, opacity: 0 }}
+                        animate={{
+                          cx: 460,
+                          cy: [12, 52],
+                          opacity: [0, 1, 1, 0]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: 0,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    )}
+                  </svg>
                 </div>
               </div>
 
-              {/* Connector area: Web App ↗ Retriever and Retriever ↘ LLM */}
-              <div className="flex justify-center py-0.5">
-                <svg width="500" height="36" viewBox="0 0 500 36" className="overflow-visible">
-                  {/* Left diagonal: Web App (bottom-left) → Retriever (top-center) */}
-                  <path
-                    d="M140 36 L250 4"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth="1.5"
-                    fill="none"
-                    strokeLinecap="round"
-                    opacity={phase >= 3 ? 1 : 0.3}
-                  />
-                  {/* Arrowhead for left diagonal (pointing up to Retriever) */}
-                  <path
-                    d="M255 14 L250 2 L243 12"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth="1.5"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    opacity={phase >= 3 ? 1 : 0.3}
-                  />
-                  {/* Traveling dot: Web App → Retriever */}
-                  {phase >= 3 && phase < 5 && (
-                    <motion.circle
-                      r="2.5"
-                      fill="hsl(var(--primary))"
-                      initial={{ cx: 140, cy: 36, opacity: 0 }}
-                      animate={{
-                        cx: [140, 250],
-                        cy: [36, 4],
-                        opacity: [0, 1, 1, 0]
-                      }}
-                      transition={{
-                        duration: 1,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    />
-                  )}
-
-                  {/* Right diagonal: Retriever (top-center) → LLM (bottom-right) */}
-                  <path
-                    d="M250 4 L360 36"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth="1.5"
-                    fill="none"
-                    strokeLinecap="round"
-                    opacity={phase >= 4 ? 1 : 0.3}
-                  />
-                  {/* Arrowhead for right diagonal (pointing down to LLM) */}
-                  <path
-                    d="M353 24 L362 38 L367 26"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth="1.5"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    opacity={phase >= 4 ? 1 : 0.3}
-                  />
-                  {/* Traveling dot: Retriever → LLM */}
-                  {phase >= 4 && phase < 5 && (
-                    <motion.circle
-                      r="2.5"
-                      fill="hsl(var(--primary))"
-                      initial={{ cx: 250, cy: 4, opacity: 0 }}
-                      animate={{
-                        cx: [250, 360],
-                        cy: [4, 36],
-                        opacity: [0, 1, 1, 0]
-                      }}
-                      transition={{
-                        duration: 1,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    />
-                  )}
-
-                  {/* "Prompt + Context" label on right diagonal */}
-                  {phase >= 4 && (
-                    <text
-                      x="320"
-                      y="14"
-                      fill="hsl(var(--primary) / 0.6)"
-                      fontSize="9"
-                      fontFamily="inherit"
-                      textAnchor="middle"
-                    >
-                      Prompt + Context
-                    </text>
-                  )}
-                </svg>
-              </div>
-
               {/* QUERY PIPELINE */}
-              <div className="border border-emerald-500/30 rounded-lg p-3 bg-emerald-500/5">
-                <span className="text-[10px] text-emerald-400 font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-3">
+              <motion.div 
+                className={`border rounded-lg p-2 cursor-pointer transition-all w-fit ${
+                  queryPipelineHighlighted 
+                    ? 'border-emerald-500 bg-emerald-500/20 shadow-lg shadow-emerald-500/20' 
+                    : 'border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10'
+                }`}
+                onClick={startQueryAnimation}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+              >
+                <span className="text-[10px] text-emerald-400 font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                   Query Pipeline
                 </span>
 
-                <div className="flex items-center justify-center">
-                  {/* Left group: Query → Web App */}
-                  <div className="flex items-center gap-3" style={{ marginRight: '100px' }}>
+                <div className="flex items-center justify-center relative">
+                  {/* Query → Web App → LLM - symmetric layout */}
+                  <div className="flex items-center">
                     {/* Query */}
-                    <div className="flex flex-col items-center">
-                      <div className="w-10 h-10 rounded-lg bg-muted/40 border border-border/50 flex items-center justify-center">
-                        <PenLine className="w-4 h-4 text-muted-foreground" />
+                    <div 
+                      className="flex flex-col items-center"
+                    >
+                      <div 
+                        className={`w-12 h-12 rounded-lg bg-muted/40 flex items-center justify-center m-2 transition-all ${
+                          queryPipelineHighlighted && phase === 1 && phase < 5
+                            ? 'border border-emerald-500 shadow-[0_0_15px_hsl(var(--emerald-500)/0.4)]'
+                            : 'border border-transparent'
+                        }`}
+                      >
+                        <PenLine className="w-5 h-5 text-muted-foreground" />
                       </div>
                       <span className="text-[10px] text-foreground font-medium mt-1">Query</span>
                     </div>
 
-                    {/* Arrow Query → Web App */}
-                    <AnimatedArrow active={phase >= 2 && phase < 5} />
-
-                    {/* Web App */}
-                    <div className="flex flex-col items-center">
-                      <div className="w-10 h-10 rounded-lg bg-muted/40 border border-border/50 flex items-center justify-center">
-                        <Monitor className="w-4 h-4 text-muted-foreground" />
-                      </div>
-                      <span className="text-[10px] text-foreground font-medium mt-1">Web App</span>
+                    {/* Arrow Query → Web App - centered between icons */}
+                    <div className="flex items-center justify-center px-2" style={{ height: '48px' }}>
+                      <AnimatedArrow active={queryPipelineHighlighted && phase === 1} width={28} repeat={0} />
                     </div>
                   </div>
 
-                  {/* Right group: LLM with answer arrow back */}
-                  <div className="flex items-center gap-3">
-                    {/* Answer arrow (LLM → Web App) */}
-                    <AnimatedReverseArrow active={phase >= 5} width={40} />
+                  {/* Web App - centered */}
+                  <div 
+                    className="flex flex-col items-center"
+                  >
+                    <div 
+                      className={`w-12 h-12 rounded-lg bg-muted/40 flex items-center justify-center m-2 transition-all ${
+                        queryPipelineHighlighted && ((phase === 1 || phase === 2) && phase < 5) || phase === 6
+                          ? 'border border-emerald-500 shadow-[0_0_15px_hsl(var(--emerald-500)/0.4)]'
+                          : 'border border-transparent'
+                      }`}
+                    >
+                      <Monitor className="w-5 h-5 text-muted-foreground" />
+                    </div>
+                    <span className="text-[10px] text-foreground font-medium mt-1">Web App</span>
+                  </div>
+
+                  {/* LLM - symmetric with Query */}
+                  <div className="flex items-center">
+                    {/* Answer arrow (LLM → Web App) - centered between icons */}
+                    <div className="flex items-center justify-center px-2" style={{ height: '48px' }}>
+                      <AnimatedReverseArrow active={queryPipelineHighlighted && phase >= 6} width={28} repeat={0} />
+                    </div>
 
                     {/* LLM */}
-                    <motion.div
-                      animate={{
-                        scale: phase >= 4 && phase < 5 ? [1, 1.08, 1] : 1,
-                        boxShadow: phase >= 4 && phase < 5
-                          ? ['0 0 0px hsl(var(--primary) / 0)', '0 0 15px hsl(var(--primary) / 0.4)', '0 0 0px hsl(var(--primary) / 0)']
-                          : 'none'
-                      }}
-                      transition={{ duration: 1, repeat: phase >= 4 && phase < 5 ? Infinity : 0 }}
-                      className="flex flex-col items-center"
-                    >
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/50 flex items-center justify-center">
+                    <div className="flex flex-col items-center">
+                      <div 
+                        className={`w-12 h-12 rounded-lg bg-muted/40 flex items-center justify-center m-2 transition-all ${
+                          queryPipelineHighlighted && (phase >= 5 && phase < 7)
+                            ? 'border border-primary shadow-[0_0_15px_hsl(var(--primary)/0.4)]'
+                            : 'border border-transparent'
+                        }`}
+                      >
                         <Brain className="w-5 h-5 text-primary" />
                       </div>
-                      <span className="text-[10px] font-bold text-primary mt-1">LLM</span>
-                    </motion.div>
+                      <span className="text-[10px] text-foreground font-medium mt-1">LLM</span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Answer label */}
-                {phase >= 5 && (
+                {queryPipelineHighlighted && phase >= 6 && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -414,7 +737,7 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
                     ← Cited Answer
                   </motion.div>
                 )}
-              </div>
+              </motion.div>
             </div>
 
             {/* Bottom label */}
