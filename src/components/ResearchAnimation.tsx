@@ -181,20 +181,20 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
     animationTimersRef.current.push(setTimeout(() => setPhase(3), 4500));
     
     // Phase 4: VectorDB → Retriever (context retrieved)
-    animationTimersRef.current.push(setTimeout(() => setPhase(4), 9000));
+    animationTimersRef.current.push(setTimeout(() => setPhase(4), 7000));
     
     // Phase 5: Retriever → LLM (L-shaped with prompt + context)
-    animationTimersRef.current.push(setTimeout(() => setPhase(5), 13500));
+    animationTimersRef.current.push(setTimeout(() => setPhase(5), 9500));
     
     // Phase 6: LLM → Web App (answer)
-    animationTimersRef.current.push(setTimeout(() => setPhase(6), 18000));
+    animationTimersRef.current.push(setTimeout(() => setPhase(6), 14000));
     
     // Reset after animation completes
     animationTimersRef.current.push(setTimeout(() => {
       setPhase(0);
       setQueryPipelineHighlighted(false);
       animationTimersRef.current = [];
-    }, 22500));
+    }, 18500));
   };
 
   const ingestionSteps = [
