@@ -50,35 +50,32 @@ const FeaturesSlide = () => {
 
   return (
     <Slide>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <span className="text-primary text-sm font-medium tracking-widest uppercase mb-6 block animate-fade-up">
           Capabilities
         </span>
 
-        <h2 className="text-4xl md:text-5xl font-bold mb-12 animate-fade-up delay-100">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-12 animate-fade-up delay-100">
           One platform. <span className="text-gradient">Three time-savers.</span>
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-10">
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className={`feature-card animate-fade-up ${feature.clickable ? 'cursor-pointer hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all' : ''}`}
+              className={`feature-card p-10 animate-fade-up ${feature.clickable ? 'cursor-pointer hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all' : ''}`}
               style={{ animationDelay: `${200 + index * 100}ms` }}
               onClick={(e) => handleCardClick(e, index)}
             >
-              <div className="step-number mb-6">
-                <feature.icon className="w-5 h-5" />
+              <div className="step-number mb-8 w-16 h-16">
+                <feature.icon className="w-7 h-7" />
               </div>
               
-              <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
-              <p className="text-primary text-sm font-medium mb-4">{feature.subtitle}</p>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <h3 className="text-2xl font-semibold mb-4">{feature.title}</h3>
+              <p className="text-primary text-base font-medium mb-4">{feature.subtitle}</p>
+              <p className="text-muted-foreground text-xl leading-relaxed">
                 {feature.description}
               </p>
-              {feature.clickable && (
-                <p className="text-primary/60 text-xs mt-4 font-medium">Click to see demo →</p>
-              )}
             </div>
           ))}
         </div>

@@ -29,7 +29,7 @@ const ControlSlide = () => {
               Control
             </span>
             
-            <h2 className="text-4xl md:text-5xl font-bold animate-fade-up delay-100">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight animate-fade-up delay-100">
               AI does the work.
               <br />
               <span className="text-gradient">Accountants make the decisions.</span>
@@ -49,12 +49,12 @@ const ControlSlide = () => {
                 className="feature-card flex items-start gap-4 animate-fade-up"
                 style={{ animationDelay: `${300 + index * 100}ms` }}
               >
-                <div className="step-number shrink-0">
-                  <control.icon className="w-5 h-5" />
+                <div className="step-number shrink-0 w-16 h-16">
+                  <control.icon className="w-7 h-7" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-1">{control.title}</h3>
-                  <p className="text-muted-foreground text-sm">{control.description}</p>
+                  <h3 className="text-2xl font-semibold mb-4">{control.title}</h3>
+                  <p className="text-muted-foreground text-xl leading-relaxed">{control.description}</p>
                 </div>
               </div>
             ))}

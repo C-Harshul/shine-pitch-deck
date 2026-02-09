@@ -307,26 +307,26 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-[min(920px,calc(100vw-3rem))] h-[min(720px,calc(100vh-3rem))] bg-card border border-border rounded-2xl overflow-y-auto"
+            className="relative w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] max-w-full max-h-full bg-card border border-border rounded-2xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
+              className="absolute top-4 left-4 z-10 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
 
             {/* Continuous playback toggle */}
-            <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2 bg-muted/50 px-3 py-2 rounded-lg">
+            <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2 bg-muted/50 px-3 py-2 rounded-lg">
               <Switch
                 id="continuous-playback"
                 checked={continuousPlayback}
                 onCheckedChange={setContinuousPlayback}
               />
               <Label htmlFor="continuous-playback" className="text-xs cursor-pointer">
-                Continuous Playback
+                Loop
               </Label>
             </div>
 
@@ -339,7 +339,7 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
             </div>
 
             {/* Main container */}
-            <div className="relative w-full h-full flex flex-col items-center px-4 py-5 gap-1.5" style={{ minHeight: '100%' }}>
+            <div className="relative w-full h-full flex flex-col items-center justify-center px-4 py-5 gap-1.5" style={{ minHeight: '100%' }}>
 
               {/* INGESTION PIPELINE */}
               <div 
@@ -802,10 +802,6 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
               </div>
             </div>
 
-            {/* Bottom label */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-muted-foreground">
-              Click anywhere outside to close
-            </div>
           </motion.div>
         </motion.div>
       )}

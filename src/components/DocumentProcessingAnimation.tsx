@@ -26,16 +26,18 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
       
       timers.push(setTimeout(() => setPhase(2), 2500)); // Enter brain
       timers.push(setTimeout(() => setPhase(3), 5000)); // Processing
-      timers.push(setTimeout(() => setProcessedDocs([0]), 6000));
-      timers.push(setTimeout(() => setProcessedDocs([0, 1]), 7000));
-      timers.push(setTimeout(() => setProcessedDocs([0, 1, 2]), 8000));
-      timers.push(setTimeout(() => setPhase(4), 8500)); // Ledger output
+      // Start arrows from Numina to ledger only after processing is complete (phase 3 ends)
+      timers.push(setTimeout(() => setPhase(4), 6500)); // Start arrows after processing phase completes
+      // Update ledger entries after arrows animate (each arrow takes ~1.2s + delay)
+      timers.push(setTimeout(() => setProcessedDocs([0]), 8000)); // After first arrow completes (~6500 + 1200 + 300)
+      timers.push(setTimeout(() => setProcessedDocs([0, 1]), 9000)); // After second arrow completes
+      timers.push(setTimeout(() => setProcessedDocs([0, 1, 2]), 10000)); // After third arrow completes
       timers.push(setTimeout(() => {
-        // Reset for loop
+        // Wait 10 seconds after all ledger entries are updated, then reset and restart
         setPhase(0);
         setProcessedDocs([]);
-        setTimeout(runAnimation, 500);
-      }, 11000));
+        setTimeout(runAnimation, 0); // Restart immediately after reset
+      }, 20000)); // 10000ms (last ledger update) + 10000ms (10 seconds pause) = 20000ms
 
       return timers;
     };
@@ -73,15 +75,15 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-[800px] h-[450px] bg-card border border-border rounded-2xl overflow-hidden"
+            className="relative w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] max-w-full max-h-full bg-card border border-border rounded-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
+              className="absolute top-4 left-4 z-10 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
 
             {/* Background grid */}
@@ -93,34 +95,28 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
             </div>
 
             {/* Labels */}
-            <div className="absolute top-6 left-8 text-xs text-muted-foreground font-medium tracking-wider uppercase">
-              Invoices & Receipts
-            </div>
-            <div className="absolute top-6 left-1/2 -translate-x-1/2 text-xs text-primary font-medium tracking-wider uppercase">
-              Numina AI – Processing
-            </div>
-            <div className="absolute top-6 right-8 text-xs text-muted-foreground font-medium tracking-wider uppercase">
-              Clean Ledger Entries
+            <div className="absolute top-6 left-1/2 -translate-x-1/2 text-xl text-primary font-medium tracking-wider uppercase">
+              Numina - Reconcile
             </div>
 
             {/* Main animation container */}
-            <div className="relative w-full h-full flex items-center justify-between px-12 pt-8">
+            <div className="relative w-full h-full flex items-center justify-center px-12 pt-8 gap-10">
               
               {/* Left: Incoming Documents from Sources */}
-              <div className="flex flex-col gap-3 w-[180px]">
+              <div className="flex flex-col gap-5 w-[260px]">
                 {documentSources.map((source, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-2 p-2.5 bg-muted/30 border border-border/50 rounded-lg"
+                    className="flex items-center gap-3.5 p-4 bg-muted/30 border border-border/50 rounded-lg"
                   >
-                    <div className={`p-1.5 rounded bg-muted/50 ${source.sourceColor}`}>
-                      <source.sourceIcon className="w-4 h-4" />
+                    <div className={`p-2.5 rounded bg-muted/50 ${source.sourceColor}`}>
+                      <source.sourceIcon className="w-6 h-6" />
                     </div>
-                    <div className="flex items-center gap-1.5 flex-1">
-                      <source.docIcon className={`w-4 h-4 ${source.docColor}`} />
+                    <div className="flex items-center gap-2.5 flex-1">
+                      <source.docIcon className={`w-6 h-6 ${source.docColor}`} />
                       <div className="flex flex-col">
-                        <span className="text-xs font-medium">{source.docLabel}</span>
-                        <span className="text-[10px] text-muted-foreground">via {source.sourceName}</span>
+                        <span className="text-base font-medium">{source.docLabel}</span>
+                        <span className="text-sm text-muted-foreground">via {source.sourceName}</span>
                       </div>
                     </div>
                   </div>
@@ -128,38 +124,38 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
               </div>
 
               {/* Animated Arrows flowing to brain */}
-              <div className="flex flex-col gap-6 items-center justify-center w-[60px]">
+              <div className="flex flex-col gap-9 items-center justify-center w-[150px]">
                 {[0, 1, 2].map((i) => (
                   <motion.svg
                     key={i}
-                    width="50"
-                    height="16"
-                    viewBox="0 0 50 16"
+                    width="150"
+                    height="22"
+                    viewBox="0 0 150 22"
                     initial={{ opacity: 0.3 }}
                     animate={{ opacity: phase >= 1 ? 1 : 0.3 }}
                     transition={{ duration: 0.5, delay: i * 0.15 }}
                   >
                     {/* Static arrow line */}
                     <path
-                      d="M0 8 L40 8 M32 2 L42 8 L32 14"
+                      d="M0 11 L140 11 M132 5 L142 11 L132 17"
                       stroke="hsl(var(--primary))"
-                      strokeWidth="2"
+                      strokeWidth="3"
                       fill="none"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
                     {/* Animated traveling dot */}
-                    {phase >= 1 && phase < 4 && (
+                    {phase === 1 && (
                       <motion.circle
-                        r="3"
-                        cy="8"
+                        r="4.5"
+                        cy="11"
                         fill="hsl(var(--primary))"
                         initial={{ cx: 0, opacity: 0 }}
-                        animate={{ cx: [0, 40], opacity: [0, 1, 1, 0] }}
+                        animate={{ cx: [0, 140], opacity: [0, 1, 1, 0] }}
                         transition={{
                           duration: 1.2,
                           delay: i * 0.3,
-                          repeat: Infinity,
+                          repeat: 0,
                           ease: "easeInOut"
                         }}
                       />
@@ -169,7 +165,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
               </div>
 
               {/* Center: AI Brain */}
-              <div className="relative flex items-center justify-center">
+              <div className="relative flex items-center justify-center mx-8">
                 <motion.div
                   animate={{
                     scale: phase >= 2 && phase < 4 ? [1, 1.05, 1] : 1,
@@ -182,7 +178,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                     repeat: phase >= 2 && phase < 4 ? Infinity : 0,
                     ease: "easeInOut"
                   }}
-                  className="relative w-40 h-40 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/50 flex items-center justify-center"
+                  className="relative w-56 h-56 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/50 flex items-center justify-center"
                 >
                   {/* Neural network visualization */}
                   <svg className="absolute inset-0 w-full h-full" viewBox="0 0 160 160">
@@ -195,8 +191,8 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                       stroke="hsl(var(--primary) / 0.3)"
                       strokeWidth="1"
                       strokeDasharray="4 4"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                      animate={{ rotate: phase >= 2 && phase < 4 ? 360 : 0 }}
+                      transition={{ duration: 20, repeat: phase >= 2 && phase < 4 ? Infinity : 0, ease: "linear" }}
                       style={{ transformOrigin: "center" }}
                     />
                     
@@ -211,7 +207,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                         stroke="hsl(var(--primary) / 0.4)"
                         strokeWidth="1"
                         animate={{
-                          opacity: phase >= 2 ? [0.3, 1, 0.3] : 0.3
+                          opacity: phase >= 2 && phase < 4 ? [0.3, 1, 0.3] : 0.3
                         }}
                         transition={{
                           duration: 0.5,
@@ -230,8 +226,8 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                         r="6"
                         fill="hsl(var(--primary))"
                         animate={{
-                          scale: phase >= 2 ? [1, 1.3, 1] : 1,
-                          opacity: phase >= 2 ? [0.5, 1, 0.5] : 0.5
+                          scale: phase >= 2 && phase < 4 ? [1, 1.3, 1] : 1,
+                          opacity: phase >= 2 && phase < 4 ? [0.5, 1, 0.5] : 0.5
                         }}
                         transition={{
                           duration: 0.8,
@@ -251,10 +247,10 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                       duration: 1,
                       repeat: phase >= 2 && phase < 4 ? Infinity : 0
                     }}
-                    className="flex flex-col items-center justify-center gap-1"
+                    className="flex flex-col items-center justify-center gap-2"
                   >
-                    <Brain className="w-10 h-10 text-primary" />
-                    <span className="text-primary font-bold text-sm tracking-wide">Numina</span>
+                    <Brain className="w-16 h-16 text-primary" />
+                    <span className="text-primary font-bold text-lg tracking-wide">Numina</span>
                   </motion.div>
 
                   {/* Processing indicator */}
@@ -262,7 +258,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="absolute -bottom-8 text-xs text-primary font-medium"
+                      className="absolute -bottom-12 text-base text-primary font-medium"
                     >
                       Processing...
                     </motion.div>
@@ -270,12 +266,53 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                 </motion.div>
               </div>
 
+              {/* Animated Arrows flowing from brain */}
+              <div className="flex flex-col gap-9 items-center justify-center w-[160px] -ml-4">
+                {[0, 1, 2].map((i) => (
+                  <motion.svg
+                    key={i}
+                    width="160"
+                    height="22"
+                    viewBox="0 0 160 22"
+                    initial={{ opacity: 0.3 }}
+                    animate={{ opacity: phase >= 4 ? 1 : 0.3 }}
+                    transition={{ duration: 0.5, delay: i * 0.15 }}
+                  >
+                    {/* Static arrow line */}
+                    <path
+                      d="M0 11 L155 11 M147 5 L157 11 L147 17"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth="3"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    {/* Animated traveling dot */}
+                    {phase === 4 && (
+                      <motion.circle
+                        r="4.5"
+                        cy="11"
+                        fill="hsl(var(--primary))"
+                        initial={{ cx: 0, opacity: 0 }}
+                        animate={{ cx: [0, 155], opacity: [0, 1, 1, 0] }}
+                        transition={{
+                          duration: 1.2,
+                          delay: i * 0.3,
+                          repeat: 0,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    )}
+                  </motion.svg>
+                ))}
+              </div>
+
               {/* Right: Ledger Output */}
-              <div className="w-[200px] bg-muted/20 border border-border/50 rounded-lg overflow-hidden">
-                <div className="bg-muted/30 px-3 py-2 border-b border-border/50">
-                  <span className="text-xs font-semibold text-foreground">General Ledger</span>
+              <div className="w-[260px] bg-muted/20 border border-border/50 rounded-lg overflow-hidden">
+                <div className="bg-muted/30 px-4 py-3 border-b border-border/50">
+                  <span className="text-base font-semibold text-foreground">General Ledger</span>
                 </div>
-                <div className="p-2 space-y-1">
+                <div className="p-3 space-y-2.5">
                   {ledgerEntries.map((entry, i) => (
                     <motion.div
                       key={i}
@@ -285,20 +322,20 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                         x: processedDocs.includes(i) ? 0 : 20
                       }}
                       transition={{ duration: 0.5 }}
-                      className="flex items-center justify-between p-2 rounded bg-muted/20 border border-border/30"
+                      className="flex items-center justify-between p-3 rounded bg-muted/20 border border-border/30"
                     >
                       <div className="flex-1">
-                        <p className="text-xs font-medium text-foreground">{entry.vendor}</p>
-                        <p className="text-[10px] text-muted-foreground">{entry.amount}</p>
+                        <p className="text-base font-medium text-foreground">{entry.vendor}</p>
+                        <p className="text-sm text-muted-foreground">{entry.amount}</p>
                       </div>
                       {processedDocs.includes(i) && (
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-2"
                         >
-                          <CheckCircle2 className="w-3 h-3 text-green-400" />
-                          <span className="text-[10px] text-green-400">{entry.status}</span>
+                          <CheckCircle2 className="w-5 h-5 text-green-400" />
+                          <span className="text-sm text-green-400">{entry.status}</span>
                         </motion.div>
                       )}
                     </motion.div>
