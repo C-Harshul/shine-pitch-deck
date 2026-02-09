@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Monitor, Brain, Database, FileText, AlertTriangle, CheckCircle2, XCircle, Bell, Shield, Zap, BookOpen } from "lucide-react";
+import { X, Monitor, Brain, Database, FileText, Bell, Shield, Zap, BookOpen, Cloud, Cpu, User } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 
 interface FlaggingAnimationProps {
@@ -8,121 +8,122 @@ interface FlaggingAnimationProps {
 }
 
 // Horizontal arrow with traveling dot
-const AnimatedArrow = ({ active, delay = 0, width = 40, label, repeat = Infinity }: { active: boolean; delay?: number; width?: number; label?: string; repeat?: number }) => (
+const AnimatedArrow = ({ active, delay = 0, width = 60, label, repeat = Infinity, reverse = false }: { active: boolean; delay?: number; width?: number; label?: string; repeat?: number; reverse?: boolean }) => (
   <div className="flex flex-col items-center justify-center" style={{ minWidth: width }}>
-    <svg width={width} height="16" viewBox={`0 0 ${width} 16`} className="overflow-visible">
-      <path
-        d={`M0 8 L${width - 8} 8 M${width - 14} 3 L${width - 6} 8 L${width - 14} 13`}
-        stroke="hsl(var(--primary))"
-        strokeWidth="1.5"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {active && (
-        <motion.circle
-          r="2.5"
-          cy="8"
-          fill="hsl(var(--primary))"
-          initial={{ cx: 0, opacity: 0 }}
-          animate={{ cx: [0, width - 8], opacity: [0, 1, 1, 0] }}
-          transition={{ duration: 1.5, delay, repeat, ease: "easeInOut" }}
-        />
+    {label && (
+      <span className="text-[8px] text-muted-foreground mb-0.5 whitespace-nowrap italic">{label}</span>
+    )}
+    <svg width={width} height="12" viewBox={`0 0 ${width} 12`} className="overflow-visible">
+      {reverse ? (
+        <>
+          <path
+            d={`M${width} 6 L8 6 M14 2 L6 6 L14 10`}
+            stroke="hsl(var(--primary) / 0.5)"
+            strokeWidth="1"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {active && (
+            <motion.circle
+              r="2"
+              cy="6"
+              fill="hsl(var(--primary))"
+              initial={{ cx: width, opacity: 0 }}
+              animate={{ cx: [width, 8], opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 1.2, delay, repeat, ease: "easeInOut" }}
+            />
+          )}
+        </>
+      ) : (
+        <>
+          <path
+            d={`M0 6 L${width - 8} 6 M${width - 12} 2 L${width - 4} 6 L${width - 12} 10`}
+            stroke="hsl(var(--primary) / 0.5)"
+            strokeWidth="1"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {active && (
+            <motion.circle
+              r="2"
+              cy="6"
+              fill="hsl(var(--primary))"
+              initial={{ cx: 0, opacity: 0 }}
+              animate={{ cx: [0, width - 8], opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 1.2, delay, repeat, ease: "easeInOut" }}
+            />
+          )}
+        </>
+      )}
+    </svg>
+  </div>
+);
+
+// Vertical arrow
+const AnimatedVerticalArrow = ({ active, height = 30, label, direction = "down", repeat = Infinity }: { active: boolean; height?: number; label?: string; direction?: "down" | "up"; repeat?: number }) => (
+  <div className="flex items-center gap-1 justify-center">
+    <svg width="12" height={height} viewBox={`0 0 12 ${height}`} className="overflow-visible">
+      {direction === "down" ? (
+        <>
+          <path
+            d={`M6 0 L6 ${height - 6} M2 ${height - 10} L6 ${height - 2} L10 ${height - 10}`}
+            stroke="hsl(var(--primary) / 0.5)"
+            strokeWidth="1"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {active && (
+            <motion.circle r="2" cx="6" fill="hsl(var(--primary))"
+              initial={{ cy: 0, opacity: 0 }}
+              animate={{ cy: [0, height - 6], opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 1.2, repeat, ease: "easeInOut" }}
+            />
+          )}
+        </>
+      ) : (
+        <>
+          <path
+            d={`M6 ${height} L6 6 M2 10 L6 2 L10 10`}
+            stroke="hsl(var(--primary) / 0.5)"
+            strokeWidth="1"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {active && (
+            <motion.circle r="2" cx="6" fill="hsl(var(--primary))"
+              initial={{ cy: height, opacity: 0 }}
+              animate={{ cy: [height, 6], opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 1.2, repeat, ease: "easeInOut" }}
+            />
+          )}
+        </>
       )}
     </svg>
     {label && (
-      <span className="text-[8px] text-primary/60 mt-0.5 whitespace-nowrap">{label}</span>
+      <span className="text-[7px] text-muted-foreground whitespace-nowrap italic">{label}</span>
     )}
   </div>
 );
 
-// Vertical arrow (top to bottom)
-const AnimatedVerticalArrow = ({ active, height = 24, repeat = Infinity }: { active: boolean; height?: number; repeat?: number }) => (
-  <div className="flex items-center justify-center">
-    <svg width="20" height={height} viewBox={`0 0 20 ${height}`}>
-      <path
-        d={`M10 0 L10 ${height - 8} M5 ${height - 12} L10 ${height - 4} L15 ${height - 12}`}
-        stroke="hsl(var(--primary))"
-        strokeWidth="1.5"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {active && (
-        <motion.circle
-          r="2.5"
-          cx="10"
-          fill="hsl(var(--primary))"
-          initial={{ cy: 0, opacity: 0 }}
-          animate={{ cy: [0, height - 8], opacity: [0, 1, 1, 0] }}
-          transition={{ duration: 1.5, repeat, ease: "easeInOut" }}
-        />
-      )}
-    </svg>
-  </div>
-);
-
-// Reverse vertical arrow (bottom to top)
-const AnimatedReverseVerticalArrow = ({ active, height = 24, repeat = Infinity }: { active: boolean; height?: number; repeat?: number }) => (
-  <div className="flex items-center justify-center">
-    <svg width="20" height={height} viewBox={`0 0 20 ${height}`}>
-      <path
-        d={`M10 ${height} L10 8 M5 12 L10 4 L15 12`}
-        stroke="hsl(var(--primary))"
-        strokeWidth="1.5"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {active && (
-        <motion.circle
-          r="2.5"
-          cx="10"
-          fill="hsl(var(--primary))"
-          initial={{ cy: height, opacity: 0 }}
-          animate={{ cy: [height, 8], opacity: [0, 1, 1, 0] }}
-          transition={{ duration: 1.5, repeat, ease: "easeInOut" }}
-        />
-      )}
-    </svg>
-  </div>
-);
-
-// Stationary card component
-const Card = ({ icon: Icon, label, sublabel, highlighted = false, color = "primary", alert = false }: {
+// Card component
+const Card = ({ icon: Icon, label, sublabel, highlighted = false }: {
   icon: any;
   label: string;
   sublabel?: string;
   highlighted?: boolean;
-  color?: string;
-  alert?: boolean;
-}) => {
-  const borderColor = highlighted
-    ? color === "red" ? "border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]"
-    : color === "green" ? "border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.4)]"
-    : color === "amber" ? "border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]"
-    : "border-primary shadow-[0_0_15px_hsl(var(--primary)/0.4)]"
-    : "border-transparent";
-
-  return (
-    <div className={`flex flex-col items-center`}>
-      <div className={`w-14 h-14 rounded-lg bg-muted/40 flex items-center justify-center border-2 transition-all duration-300 ${borderColor} relative`}>
-        <Icon className={`w-5 h-5 ${highlighted && color === "red" ? "text-red-400" : highlighted && color === "green" ? "text-green-400" : highlighted && color === "amber" ? "text-amber-400" : "text-muted-foreground"}`} />
-        {alert && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 flex items-center justify-center"
-          >
-            <span className="text-[8px] text-white font-bold">!</span>
-          </motion.div>
-        )}
-      </div>
-      <span className="text-[11px] text-foreground font-medium mt-1">{label}</span>
-      {sublabel && <span className="text-[9px] text-muted-foreground">{sublabel}</span>}
+}) => (
+  <div className="flex flex-col items-center">
+    <div className={`w-12 h-12 rounded-lg bg-muted/30 flex items-center justify-center border transition-all duration-300 ${highlighted ? "border-primary/60 shadow-[0_0_12px_hsl(var(--primary)/0.3)]" : "border-border/40"}`}>
+      <Icon className={`w-4 h-4 ${highlighted ? "text-primary" : "text-muted-foreground"}`} />
     </div>
-  );
-};
+    <span className="text-[10px] text-foreground font-medium mt-1 text-center leading-tight">{label}</span>
+    {sublabel && <span className="text-[8px] text-muted-foreground text-center">{sublabel}</span>}
+  </div>
+);
 
 const FlaggingAnimation = ({ isOpen, onClose }: FlaggingAnimationProps) => {
   const [phase, setPhase] = useState(0);
@@ -141,43 +142,32 @@ const FlaggingAnimation = ({ isOpen, onClose }: FlaggingAnimationProps) => {
       timersRef.current = [];
       setPhase(0);
 
-      // Phase 1: Rule Creation (0-10s)
-      timersRef.current.push(setTimeout(() => setPhase(1), 500));    // Accountant types rule
-      timersRef.current.push(setTimeout(() => setPhase(2), 2500));   // Rule → LLM + QB context → LLM
-      timersRef.current.push(setTimeout(() => setPhase(3), 5000));   // LLM processing
-      timersRef.current.push(setTimeout(() => setPhase(4), 7000));   // JSON rule → Rules DB
+      // Rule Intake flow
+      timersRef.current.push(setTimeout(() => setPhase(1), 500));    // Accountant → LLM
+      timersRef.current.push(setTimeout(() => setPhase(2), 2500));   // LLM processing
+      timersRef.current.push(setTimeout(() => setPhase(3), 4500));   // LLM → Rules DB (store JSON)
 
-      // Phase 2: Transaction Monitoring (10-20s)
-      timersRef.current.push(setTimeout(() => setPhase(5), 9500));   // QB → Transaction Queue
-      timersRef.current.push(setTimeout(() => setPhase(6), 12000));  // Queue → Rule Engine + Engine pulls rules
-      timersRef.current.push(setTimeout(() => setPhase(7), 14500));  // Evaluation results
-
-      // Phase 3: Flagging & Notification (20-30s)
-      timersRef.current.push(setTimeout(() => setPhase(8), 17000));  // Flagged → Flagging Service
-      timersRef.current.push(setTimeout(() => setPhase(9), 19500));  // → Flagged DB + Notification
-      timersRef.current.push(setTimeout(() => setPhase(10), 22000)); // → Auditor Dashboard
+      // Context flow + Rule Enforcement
+      timersRef.current.push(setTimeout(() => setPhase(4), 7000));   // Context: Accountant → QB
+      timersRef.current.push(setTimeout(() => setPhase(5), 9000));   // QB → Transaction Queue
+      timersRef.current.push(setTimeout(() => setPhase(6), 11000));  // Queue → Engine + Fetch rules
+      timersRef.current.push(setTimeout(() => setPhase(7), 13500));  // Engine → Flagging Service
+      timersRef.current.push(setTimeout(() => setPhase(8), 15500));  // Flagging → Notification
+      timersRef.current.push(setTimeout(() => setPhase(9), 17500));  // Notification → Auditor
 
       // Loop
       timersRef.current.push(setTimeout(() => {
         setPhase(0);
         setTimeout(runAnimation, 800);
-      }, 25000));
+      }, 20000));
     };
 
     runAnimation();
-
     return () => {
       timersRef.current.forEach(t => clearTimeout(t));
       timersRef.current = [];
     };
   }, [isOpen]);
-
-  // Transaction items for phase 2
-  const transactions = [
-    { desc: "Office Supplies", amount: "$320", compliant: true },
-    { desc: "Consulting Fee", amount: "$7,500", compliant: false },
-    { desc: "Software License", amount: "$1,200", compliant: true },
-  ];
 
   return (
     <AnimatePresence>
@@ -193,18 +183,15 @@ const FlaggingAnimation = ({ isOpen, onClose }: FlaggingAnimationProps) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-[min(960px,calc(100vw-2rem))] h-[min(640px,calc(100vh-3rem))] bg-card border border-border rounded-2xl overflow-hidden"
+            className="relative w-[min(1100px,calc(100vw-2rem))] h-[min(520px,calc(100vh-3rem))] bg-card border border-border rounded-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
-            >
+            <button onClick={onClose} className="absolute top-4 right-4 z-10 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors">
               <X className="w-4 h-4" />
             </button>
 
-            {/* Background grid */}
+            {/* Grid background */}
             <div className="absolute inset-0 opacity-10">
               <div className="w-full h-full" style={{
                 backgroundImage: 'linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)',
@@ -213,162 +200,99 @@ const FlaggingAnimation = ({ isOpen, onClose }: FlaggingAnimationProps) => {
             </div>
 
             {/* Title */}
-            <div className="absolute top-5 left-1/2 -translate-x-1/2 text-center">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 text-center">
               <h3 className="text-sm font-bold text-foreground">Numina — Automatic Flagging</h3>
-              <p className="text-[10px] text-muted-foreground mt-0.5">
-                {phase <= 4 ? "Phase 1: Rule Creation" : phase <= 7 ? "Phase 2: Transaction Monitoring" : "Phase 3: Flagging & Notification"}
-              </p>
             </div>
 
-            <div className="relative w-full h-full flex flex-col justify-center items-center px-6 pt-10 pb-8 gap-6">
+            {/* Main layout */}
+            <div className="relative w-full h-full pt-14 pb-8 px-8">
 
-              {/* ===== ROW 1: RULE CREATION ===== */}
-              <div className="border-2 border-emerald-500/30 rounded-lg p-3 bg-emerald-500/5 w-full max-w-[860px]">
-                <span className="text-[10px] text-emerald-400 font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  Rule Creation Pipeline
-                </span>
+              {/* === TOP ROW: QuickBooks + Transaction Queue → Rule Enforcement box → Notification → Auditor === */}
+              <div className="flex items-center justify-center gap-2 mb-4">
 
-                <div className="flex items-center justify-center gap-1">
-                  {/* Accountant */}
-                  <Card icon={Monitor} label="Accountant" sublabel="Plain English" highlighted={phase >= 1 && phase <= 4} color="green" />
-
-                  <AnimatedArrow active={phase >= 1 && phase <= 4} width={36} label={phase >= 1 ? '"Flag >$5k"' : undefined} repeat={phase >= 2 ? 0 : Infinity} />
-
-                  {/* LLM */}
-                  <div className="relative">
-                    <Card icon={Brain} label="LLM" sublabel="Parse Rule" highlighted={phase >= 3 && phase <= 4} color="amber" />
-                    {phase >= 3 && phase < 4 && (
-                      <motion.div
-                        className="absolute -bottom-4 left-1/2 -translate-x-1/2"
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 1, repeat: Infinity }}
-                      >
-                        <span className="text-[8px] text-amber-400">Processing...</span>
-                      </motion.div>
-                    )}
-                  </div>
-
-                  <AnimatedArrow active={phase >= 4} width={36} label="JSON Rule" repeat={0} />
-
-                  {/* Rules Database */}
-                  <Card icon={Database} label="Rules DB" sublabel={phase >= 4 ? "+1 Rule" : "Storage"} highlighted={phase >= 4} color="green" alert={phase >= 4} />
+                {/* Context arrow from below (visual label) */}
+                <div className="flex flex-col items-center">
+                  <Card icon={BookOpen} label="QuickBooks" sublabel="(External)" highlighted={phase >= 4} />
                 </div>
 
-                {/* QuickBooks context arrow (diagonal into LLM) */}
-                <div className="flex items-center justify-center mt-2">
-                  <div className="flex items-center gap-1">
-                    <Card icon={BookOpen} label="QuickBooks" sublabel="OAuth Context" highlighted={phase >= 2 && phase <= 3} />
-                    <AnimatedArrow active={phase >= 2 && phase <= 3} width={36} label="Chart of Accts" repeat={Infinity} />
-                    <span className="text-[9px] text-muted-foreground">→ LLM Context</span>
+                <AnimatedArrow active={phase >= 5} width={50} />
+
+                <Card icon={FileText} label="Transaction" sublabel="Queue" highlighted={phase >= 5} />
+
+                <AnimatedArrow active={phase >= 6} width={50} label="Process transaction" />
+
+                {/* RULE ENFORCEMENT BOX */}
+                <div className="border border-blue-500/40 rounded-lg px-4 py-3 bg-blue-500/5 relative">
+                  <span className="absolute -top-2.5 left-3 bg-card px-2 text-[9px] text-blue-400 font-semibold tracking-wider uppercase flex items-center gap-1">
+                    <Shield className="w-3 h-3" /> Rule Enforcement
+                  </span>
+                  <div className="flex items-start gap-3 mt-1">
+                    {/* Engine + Flagging Service inside */}
+                    <div className="flex flex-col items-center">
+                      <Card icon={Cpu} label="Rule" sublabel="Enforcement Engine" highlighted={phase >= 6} />
+                    </div>
+
+                    {/* Internal arrow: Flag non-compliance */}
+                    <div className="flex flex-col items-center justify-center pt-2">
+                      <AnimatedArrow active={phase >= 7} width={60} label="Flag non-compliance" />
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                      <Card icon={Zap} label="Flagging" sublabel="Service" highlighted={phase >= 7} />
+                    </div>
+                  </div>
+                </div>
+
+                <AnimatedArrow active={phase >= 8} width={50} label="Alert" />
+
+                <Card icon={Bell} label="Notification" sublabel="System" highlighted={phase >= 8} />
+
+                <AnimatedArrow active={phase >= 9} width={50} label="Notify" />
+
+                <Card icon={Monitor} label="Auditor" sublabel="Dashboard" highlighted={phase >= 9} />
+              </div>
+
+              {/* Vertical connectors */}
+              <div className="flex items-start justify-center gap-2 relative">
+                {/* Left side: Context arrow (Accountant up to QuickBooks) */}
+                <div className="absolute left-[60px] top-0">
+                  <AnimatedVerticalArrow active={phase >= 4} height={30} label="Context" direction="up" />
+                </div>
+
+                {/* Right-center: Fetch rules arrow (Engine down to Rules DB) */}
+                {/* This is positioned between the enforcement box and Rules DB */}
+              </div>
+
+              {/* === BOTTOM ROW: Rule Intake box + Rules Database === */}
+              <div className="flex items-end justify-between mt-6 px-4">
+
+                {/* RULE INTAKE BOX - bottom left */}
+                <div className="border border-amber-500/40 rounded-lg px-4 py-3 bg-amber-500/5 relative">
+                  <span className="absolute -top-2.5 left-3 bg-card px-2 text-[9px] text-amber-400 font-semibold tracking-wider uppercase flex items-center gap-1">
+                    <Shield className="w-3 h-3" /> Rule Intake
+                  </span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Card icon={User} label="Accountant" sublabel="Interface" highlighted={phase >= 1} />
+                    <AnimatedArrow active={phase >= 1} width={60} label="Plaintext Rule" />
+                    <Card icon={Cloud} label="LLM Rule" sublabel="Converter" highlighted={phase >= 2} />
+                  </div>
+                </div>
+
+                {/* Long arrow: Store JSON rule → Rules DB */}
+                <div className="flex items-center gap-2 self-center">
+                  <AnimatedArrow active={phase >= 3} width={120} label="Store JSON rule" />
+                </div>
+
+                {/* Rules Database - bottom right */}
+                <div className="flex flex-col items-center">
+                  <Card icon={Database} label="Rules" sublabel="Database" highlighted={phase >= 3 || phase >= 6} />
+                  {/* Fetch rules arrow going up to Engine */}
+                  <div className="mt-1">
+                    <AnimatedVerticalArrow active={phase >= 6} height={24} label="Fetch rules" direction="up" />
                   </div>
                 </div>
               </div>
 
-              {/* ===== ROW 2: TRANSACTION MONITORING ===== */}
-              <div className="border-2 border-sky-500/30 rounded-lg p-3 bg-sky-500/5 w-full max-w-[860px]">
-                <span className="text-[10px] text-sky-400 font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-                  Transaction Monitoring
-                </span>
-
-                <div className="flex items-center justify-center gap-1">
-                  {/* QuickBooks Feed */}
-                  <Card icon={BookOpen} label="QuickBooks" sublabel="Txn Feed" highlighted={phase >= 5} color="primary" />
-
-                  <AnimatedArrow active={phase >= 5 && phase <= 7} width={36} label="Transactions" />
-
-                  {/* Transaction Queue */}
-                  <Card icon={FileText} label="Txn Queue" sublabel="Buffer" highlighted={phase >= 5} />
-
-                  <AnimatedArrow active={phase >= 6} width={36} />
-
-                  {/* Rule Enforcement Engine */}
-                  <div className="relative">
-                    <Card icon={Shield} label="Rule Engine" sublabel="Enforce" highlighted={phase >= 6} color="amber" />
-                    {/* Arrow from Rules DB (visual indication) */}
-                    {phase >= 6 && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="absolute -top-5 left-1/2 -translate-x-1/2"
-                      >
-                        <span className="text-[8px] text-amber-400">← Rules DB</span>
-                      </motion.div>
-                    )}
-                  </div>
-
-                  <AnimatedArrow active={phase >= 7} width={36} />
-
-                  {/* Evaluation Results */}
-                  <div className="flex flex-col gap-1 min-w-[100px]">
-                    {transactions.map((txn, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0.3 }}
-                        animate={{
-                          opacity: phase >= 7 ? 1 : 0.3,
-                          borderColor: phase >= 7 && !txn.compliant ? "rgba(239,68,68,0.6)" : "transparent",
-                        }}
-                        transition={{ duration: 0.4, delay: i * 0.3 }}
-                        className={`flex items-center gap-1.5 px-2 py-1 rounded text-[9px] border bg-muted/30 ${phase >= 7 && !txn.compliant ? "bg-red-500/10" : ""}`}
-                      >
-                        {phase >= 7 && (
-                          txn.compliant
-                            ? <CheckCircle2 className="w-3 h-3 text-green-400 shrink-0" />
-                            : <XCircle className="w-3 h-3 text-red-400 shrink-0" />
-                        )}
-                        <span className="text-foreground">{txn.desc}</span>
-                        <span className="text-muted-foreground ml-auto">{txn.amount}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* ===== ROW 3: FLAGGING & NOTIFICATION ===== */}
-              <div className="border-2 border-red-500/30 rounded-lg p-3 bg-red-500/5 w-full max-w-[860px]">
-                <span className="text-[10px] text-red-400 font-semibold tracking-wider uppercase flex items-center gap-1.5 mb-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
-                  Flagging & Notification
-                </span>
-
-                <div className="flex items-center justify-center gap-1">
-                  {/* Flagged Transaction */}
-                  <Card icon={AlertTriangle} label="Flagged Txn" sublabel="$7,500" highlighted={phase >= 8} color="red" />
-
-                  <AnimatedArrow active={phase >= 8} width={36} repeat={0} />
-
-                  {/* Flagging Service */}
-                  <Card icon={Zap} label="Flag Service" sublabel="Process" highlighted={phase >= 8} color="red" />
-
-                  <AnimatedArrow active={phase >= 9} width={36} repeat={0} />
-
-                  {/* Flagged DB */}
-                  <Card icon={Database} label="Flagged DB" sublabel="Stored" highlighted={phase >= 9} color="red" />
-
-                  <AnimatedArrow active={phase >= 9} width={36} label="Notify" repeat={0} />
-
-                  {/* Notification System */}
-                  <Card icon={Bell} label="Notifications" sublabel="Alert" highlighted={phase >= 9} color="amber" alert={phase >= 9} />
-
-                  <AnimatedArrow active={phase >= 10} width={36} repeat={0} />
-
-                  {/* Auditor Dashboard */}
-                  <div className="relative">
-                    <Card icon={Monitor} label="Auditor" sublabel="Dashboard" highlighted={phase >= 10} color="amber" />
-                    {phase >= 10 && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center"
-                      >
-                        <span className="text-[8px] text-white font-bold">1</span>
-                      </motion.div>
-                    )}
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Bottom label */}
