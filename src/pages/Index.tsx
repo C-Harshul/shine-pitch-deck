@@ -1,5 +1,6 @@
 import Presentation from "@/components/Presentation";
 import TitleSlide from "@/components/slides/TitleSlide";
+import InsightSlide from "@/components/slides/InsightSlide";
 import ProblemSlide from "@/components/slides/ProblemSlide";
 import PainPointsSlide from "@/components/slides/PainPointsSlide";
 import SolutionSlide from "@/components/slides/SolutionSlide";
@@ -18,6 +19,7 @@ const Index = () => {
   return (
     <Presentation>
       <TitleSlide />
+      <InsightSlide />
       <ProblemSlide />
       <PainPointsSlide />
       <SolutionSlide />
