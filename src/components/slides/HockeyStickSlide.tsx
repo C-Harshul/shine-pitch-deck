@@ -10,17 +10,17 @@ import {
   ReferenceArea,
 } from "recharts";
 import Slide from "@/components/Slide";
-import { Play, Pause, RotateCcw } from "lucide-react";
+import { Play, RotateCcw } from "lucide-react";
 
-// Hockey stick curve formula: y = 15 + (0.00306 * x²)
-// Adjusted to require ~70% variance reduction for 100% capacity increase (15 → 30)
+// Capacity curve: y = 15 + (0.00306 * x²)
+// At 70% reduction → ~30 clients (2x baseline of 15)
 const generateData = () => {
   const points = [];
   for (let x = 0; x <= 80; x += 2) {
     points.push({
       x,
       y: 15 + 0.00306 * x * x,
-      roi: 1 + (0.00306 * x * x) / 15,
+      capacityMultiplier: (15 + 0.00306 * x * x) / 15,
     });
   }
   return points;
@@ -28,38 +28,27 @@ const generateData = () => {
 
 const fullData = generateData();
 
-const keyPoints = [
-  { x: 0, y: 15, label: "0%" },
-  { x: 20, y: 16.22, label: "20%" },
-  { x: 40, y: 19.9, label: "40%" },
-  { x: 50, y: 22.65, label: "50%" },
-  { x: 60, y: 26.02, label: "60%" },
-  { x: 70, y: 29.99, label: "70%" }, // ~30 clients = 100% increase
-  { x: 75, y: 32.21, label: "75%" },
-  { x: 80, y: 34.58, label: "80%" },
-];
-
 const HockeyStickSlide = () => {
   const [phase, setPhase] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [animatedData, setAnimatedData] = useState<typeof fullData>([]);
-  const [showZones, setShowZones] = useState({ linear: false, inflection: false, exponential: false });
+  const [showZones, setShowZones] = useState({ marginal: false, coordination: false, system: false });
   const [showNuminaPoint, setShowNuminaPoint] = useState(false);
   const [showYAxisLine, setShowYAxisLine] = useState(false);
   const [showMetrics, setShowMetrics] = useState(false);
   const [clientCount, setClientCount] = useState(15);
-  const [showROI, setShowROI] = useState(false);
+  const [showCapacity, setShowCapacity] = useState(false);
   const [showClosing, setShowClosing] = useState(false);
 
   const resetAnimation = useCallback(() => {
     setPhase(0);
     setAnimatedData([]);
-    setShowZones({ linear: false, inflection: false, exponential: false });
+    setShowZones({ marginal: false, coordination: false, system: false });
     setShowNuminaPoint(false);
     setShowYAxisLine(false);
     setShowMetrics(false);
     setClientCount(15);
-    setShowROI(false);
+    setShowCapacity(false);
     setShowClosing(false);
     setIsPlaying(false);
   }, []);
@@ -76,14 +65,12 @@ const HockeyStickSlide = () => {
     }
   }, [phase, showClosing]);
 
-  // Animation sequence controller
   useEffect(() => {
     if (!isPlaying) return;
 
     const timers: NodeJS.Timeout[] = [];
 
     if (phase === 1) {
-      // SCENE 1: Draw the curve (smoother animation)
       let dataIndex = 0;
       const drawInterval = setInterval(() => {
         if (dataIndex < fullData.length) {
@@ -98,20 +85,17 @@ const HockeyStickSlide = () => {
     }
 
     if (phase === 2) {
-      // SCENE 2: Zone highlighting (6 seconds)
-      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, linear: true })), 500));
-      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, inflection: true })), 2500));
-      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, exponential: true })), 4500));
+      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, marginal: true })), 500));
+      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, coordination: true })), 2500));
+      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, system: true })), 4500));
       timers.push(setTimeout(() => setPhase(3), 6000));
     }
 
     if (phase === 3) {
-      // SCENE 3: Numina Impact Point (5 seconds)
       timers.push(setTimeout(() => setShowNuminaPoint(true), 500));
-      timers.push(setTimeout(() => setShowYAxisLine(true), 1000)); // Show y-axis line after x-axis line
+      timers.push(setTimeout(() => setShowYAxisLine(true), 1000));
       timers.push(setTimeout(() => setShowMetrics(true), 1500));
-      
-      // Animate client count from 15 to 30 (100% increase)
+
       let count = 15;
       const countInterval = setInterval(() => {
         if (count < 30) {
@@ -122,16 +106,15 @@ const HockeyStickSlide = () => {
         }
       }, 50);
       timers.push(countInterval as unknown as NodeJS.Timeout);
-      
+
       timers.push(setTimeout(() => setPhase(4), 5000));
     }
 
     if (phase === 4) {
-      // SCENE 4: ROI Multiplier (5 seconds) - then stop and wait for click
-      timers.push(setTimeout(() => setShowROI(true), 500));
+      timers.push(setTimeout(() => setShowCapacity(true), 500));
       timers.push(setTimeout(() => {
         setIsPlaying(false);
-        setPhase(5); // Ready for closing, but requires click
+        setPhase(5);
       }, 5000));
     }
 
@@ -140,42 +123,38 @@ const HockeyStickSlide = () => {
     };
   }, [phase, isPlaying]);
 
-  // Gradient definitions
-  const GradientDefs = () => (
-    <defs>
-      <linearGradient id="curveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="#ef4444" />
-        <stop offset="50%" stopColor="#f59e0b" />
-        <stop offset="100%" stopColor="#10b981" />
-      </linearGradient>
-      <linearGradient id="areaGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="#ef4444" stopOpacity="0.3" />
-        <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.3" />
-        <stop offset="100%" stopColor="#10b981" stopOpacity="0.3" />
-      </linearGradient>
-    </defs>
-  );
-
   return (
     <Slide>
       <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
-        {/* Title */}
+        {/* Header with causal chain */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-left mb-4"
+          className="text-left mb-2"
         >
           <span className="text-primary text-sm font-medium tracking-widest uppercase mb-2 block">
-            Numina reduces variation in the SMB books
+            The Capacity Equation
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-2 text-left">
-            Reducing the variation leads to increase in client capacity
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 text-left">
+            Structure unlocks sustainable capacity growth
           </h2>
+          {/* Causal chain */}
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mb-1">
+            <span className="bg-card/60 border border-border/50 rounded px-2 py-1">Structure data</span>
+            <span className="text-primary">→</span>
+            <span className="bg-card/60 border border-border/50 rounded px-2 py-1">Lower variance</span>
+            <span className="text-primary">→</span>
+            <span className="bg-card/60 border border-border/50 rounded px-2 py-1">Fewer exceptions</span>
+            <span className="text-primary">→</span>
+            <span className="bg-card/60 border border-border/50 rounded px-2 py-1">Higher capacity</span>
+            <span className="text-primary">→</span>
+            <span className="bg-primary/20 border border-primary/30 rounded px-2 py-1 text-foreground font-medium">Higher revenue per accountant</span>
+          </div>
         </motion.div>
 
-        {/* Control buttons */}
-        <div className="flex justify-center gap-4 mb-4">
+        {/* Controls */}
+        <div className="flex justify-center gap-4 mb-3">
           <button
             onClick={startAnimation}
             disabled={isPlaying}
@@ -202,15 +181,13 @@ const HockeyStickSlide = () => {
           </button>
         </div>
 
-        {/* Chart Container */}
-        <div className="flex-1 relative min-h-[300px]">
+        {/* Chart */}
+        <div className="flex-1 relative min-h-[280px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={animatedData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              margin={{ top: 20, right: 30, left: 30, bottom: 30 }}
             >
-              <GradientDefs />
-              
               <XAxis
                 dataKey="x"
                 stroke="hsl(var(--muted-foreground))"
@@ -231,43 +208,28 @@ const HockeyStickSlide = () => {
                 axisLine={{ stroke: "hsl(var(--border))" }}
                 domain={[0, 40]}
                 label={{
-                  value: "Clients per Accountant",
+                  value: "Sustainable Clients per Accountant (at target SLA)",
                   angle: -90,
                   position: "insideLeft",
                   fill: "hsl(var(--muted-foreground))",
-                  fontSize: 12,
+                  fontSize: 10,
+                  dx: -10,
                 }}
               />
 
               {/* Zone highlighting */}
               <AnimatePresence>
-                {showZones.linear && (
-                  <ReferenceArea
-                    x1={0}
-                    x2={40}
-                    fill="hsl(var(--muted))"
-                    fillOpacity={0.15}
-                  />
+                {showZones.marginal && (
+                  <ReferenceArea x1={0} x2={40} fill="hsl(var(--muted))" fillOpacity={0.15} />
                 )}
-                {showZones.inflection && (
-                  <ReferenceArea
-                    x1={40}
-                    x2={60}
-                    fill="hsl(var(--muted))"
-                    fillOpacity={0.15}
-                  />
+                {showZones.coordination && (
+                  <ReferenceArea x1={40} x2={60} fill="hsl(var(--muted))" fillOpacity={0.15} />
                 )}
-                {showZones.exponential && (
-                  <ReferenceArea
-                    x1={60}
-                    x2={80}
-                    fill="hsl(var(--muted))"
-                    fillOpacity={0.15}
-                  />
+                {showZones.system && (
+                  <ReferenceArea x1={60} x2={80} fill="hsl(var(--muted))" fillOpacity={0.15} />
                 )}
               </AnimatePresence>
 
-              {/* Numina impact line */}
               {showNuminaPoint && (
                 <ReferenceLine
                   x={70}
@@ -278,7 +240,6 @@ const HockeyStickSlide = () => {
                 />
               )}
 
-              {/* Y-axis reference line at 30 clients */}
               {showYAxisLine && (
                 <ReferenceLine
                   y={30}
@@ -289,7 +250,6 @@ const HockeyStickSlide = () => {
                 />
               )}
 
-              {/* The hockey stick curve */}
               <Area
                 type="monotone"
                 dataKey="y"
@@ -306,42 +266,45 @@ const HockeyStickSlide = () => {
 
           {/* Zone labels */}
           <AnimatePresence>
-            {showZones.linear && (
+            {showZones.marginal && (
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="absolute left-[8%] top-[60%] text-xs md:text-sm"
+                className="absolute left-[8%] top-[55%] text-xs md:text-sm"
               >
                 <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <div className="font-semibold text-foreground">LINEAR ZONE</div>
-                  <div className="text-muted-foreground text-xs">+1-2 clients per 10%</div>
+                  <div className="font-semibold text-foreground">MARGINAL GAINS</div>
+                  <div className="text-muted-foreground text-xs">Basic cleanup, simple fixes</div>
+                  <div className="text-muted-foreground text-xs">+1–2 clients per 10%</div>
                 </div>
               </motion.div>
             )}
-            {showZones.inflection && (
+            {showZones.coordination && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="absolute left-[40%] top-[45%] text-xs md:text-sm"
+                className="absolute left-[40%] top-[40%] text-xs md:text-sm"
               >
                 <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <div className="font-semibold text-foreground">INFLECTION ZONE</div>
-                  <div className="text-muted-foreground text-xs">+3-5 clients per 10%</div>
+                  <div className="font-semibold text-foreground">COORDINATION GAINS</div>
+                  <div className="text-muted-foreground text-xs">Batching, fewer handoffs</div>
+                  <div className="text-muted-foreground text-xs">+3–5 clients per 10%</div>
                 </div>
               </motion.div>
             )}
-            {showZones.exponential && (
+            {showZones.system && (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="absolute right-[8%] top-[20%] text-xs md:text-sm"
+                className="absolute right-[8%] top-[15%] text-xs md:text-sm"
               >
                 <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <div className="font-semibold text-foreground">EXPONENTIAL ZONE</div>
-                  <div className="text-muted-foreground text-xs">+6-10 clients per 10%</div>
+                  <div className="font-semibold text-foreground">SYSTEM-LEVEL GAINS</div>
+                  <div className="text-muted-foreground text-xs">Exception collapse, no context switching</div>
+                  <div className="text-muted-foreground text-xs">+6–10 clients per 10%</div>
                 </div>
               </motion.div>
             )}
@@ -357,7 +320,7 @@ const HockeyStickSlide = () => {
                 className="absolute right-[2%] top-[5%]"
               >
                 <div className="bg-card/80 border-2 border-primary/30 rounded-xl px-4 py-3 backdrop-blur-sm">
-                  <div className="font-bold text-foreground text-lg">Numina Impact</div>
+                  <div className="font-bold text-foreground text-lg">Numina Target</div>
                   <div className="text-2xl font-bold text-primary">70% Variance Reduction</div>
                 </div>
               </motion.div>
@@ -371,13 +334,13 @@ const HockeyStickSlide = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className="absolute left-[10%] top-[27%] md:left-[10%]"
+                className="absolute left-[10%] top-[22%] md:left-[10%]"
               >
                 <div className="bg-card/80 border border-border rounded-xl p-4 backdrop-blur-sm space-y-3">
-                  <div className="text-sm font-medium text-muted-foreground mb-2">Before → After</div>
+                  <div className="text-sm font-medium text-muted-foreground mb-2">Before → After Numina</div>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <div className="text-muted-foreground">Clients</div>
+                      <div className="text-muted-foreground">Sustainable clients</div>
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">15</span>
                         <span className="text-primary">→</span>
@@ -392,7 +355,7 @@ const HockeyStickSlide = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground">Variance</div>
+                      <div className="text-muted-foreground">Task variance</div>
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">±12h</span>
                         <span className="text-primary">→</span>
@@ -400,11 +363,11 @@ const HockeyStickSlide = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground">Avg TPT</div>
+                      <div className="text-muted-foreground">Exceptions/week</div>
                       <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground">22h</span>
+                        <span className="text-muted-foreground">18</span>
                         <span className="text-primary">→</span>
-                        <span className="text-foreground font-bold">11h</span>
+                        <span className="text-foreground font-bold">5</span>
                       </div>
                     </div>
                     <div>
@@ -419,14 +382,17 @@ const HockeyStickSlide = () => {
                       </motion.div>
                     </div>
                   </div>
+                  <div className="text-xs text-muted-foreground/70 pt-1 border-t border-border/30">
+                    Revenue scales through throughput—not longer hours.
+                  </div>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* ROI Multipliers */}
+          {/* Effective Capacity Multiplier */}
           <AnimatePresence>
-            {showROI && (
+            {showCapacity && (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -434,14 +400,14 @@ const HockeyStickSlide = () => {
                 className="absolute right-[5%] bottom-[15%] md:right-[10%]"
               >
                 <div className="bg-card/80 border border-border rounded-xl p-4 backdrop-blur-sm">
-                  <div className="text-sm font-medium text-muted-foreground mb-3">ROI Multiplier</div>
+                  <div className="text-sm font-medium text-muted-foreground mb-3">Effective Capacity Multiplier</div>
                   <div className="space-y-2">
                     {[
-                      { reduction: "20%", roi: "1.1x", color: "text-muted-foreground" },
-                      { reduction: "40%", roi: "1.3x", color: "text-muted-foreground" },
-                      { reduction: "60%", roi: "1.7x", color: "text-muted-foreground" },
-                      { reduction: "70%", roi: "2.0x", color: "text-foreground", highlight: true },
-                      { reduction: "80%", roi: "2.3x", color: "text-muted-foreground" },
+                      { reduction: "20%", mult: "1.1×", color: "text-muted-foreground" },
+                      { reduction: "40%", mult: "1.3×", color: "text-muted-foreground" },
+                      { reduction: "60%", mult: "1.7×", color: "text-muted-foreground" },
+                      { reduction: "70%", mult: "2.0×", color: "text-foreground", highlight: true },
+                      { reduction: "80%", mult: "2.3×", color: "text-muted-foreground" },
                     ].map((item, i) => (
                       <motion.div
                         key={item.reduction}
@@ -452,7 +418,7 @@ const HockeyStickSlide = () => {
                       >
                         <span className={item.color}>{item.reduction}</span>
                         <span className={`font-bold ${item.highlight ? "text-lg text-primary" : ""}`}>
-                          {item.roi}
+                          {item.mult}
                         </span>
                       </motion.div>
                     ))}
@@ -480,27 +446,27 @@ const HockeyStickSlide = () => {
                     <div className="text-4xl md:text-6xl font-bold text-primary">70%</div>
                     <div className="text-muted-foreground">Variance Reduction</div>
                   </motion.div>
-                  
+
                   <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.5 }}
                     className="space-y-2"
                   >
-                    <div className="text-4xl md:text-6xl font-bold text-green-400">+100%</div>
-                    <div className="text-muted-foreground">Client Capacity</div>
+                    <div className="text-4xl md:text-6xl font-bold text-green-400">2.0×</div>
+                    <div className="text-muted-foreground">Effective Capacity Multiplier</div>
                   </motion.div>
-                  
+
                   <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.8 }}
                     className="space-y-2"
                   >
-                    <div className="text-4xl md:text-6xl font-bold text-blue-400">2.0x</div>
-                    <div className="text-muted-foreground">ROI vs Manual Methods</div>
+                    <div className="text-4xl md:text-6xl font-bold text-blue-400">15 → 30</div>
+                    <div className="text-muted-foreground">Sustainable Clients per Accountant</div>
                   </motion.div>
-                  
+
                   <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -508,10 +474,7 @@ const HockeyStickSlide = () => {
                     className="pt-6"
                   >
                     <div className="text-2xl font-bold text-gradient mb-2">
-                      Numina: Cross the Inflection Point
-                    </div>
-                    <div className="text-lg text-muted-foreground">
-                      Standardize. Scale. Serve.
+                      More clients. Same hours. Higher quality.
                     </div>
                   </motion.div>
                 </div>
@@ -520,15 +483,25 @@ const HockeyStickSlide = () => {
           </AnimatePresence>
         </div>
 
-        {/* Interactive hint when not playing */}
+        {/* Footnote */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="text-center text-muted-foreground/60 text-xs mt-2"
+        >
+          At high utilization, small reductions in process variance unlock outsized capacity gains—a well-documented effect in queueing theory and operations research.
+        </motion.div>
+
+        {/* Hint */}
         {!isPlaying && animatedData.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="text-center text-muted-foreground text-sm"
+            className="text-center text-muted-foreground text-sm mt-1"
           >
-            Click "Play Animation" to see the hockey stick effect
+            Click "Play Animation" to see the capacity curve
           </motion.div>
         )}
       </div>
