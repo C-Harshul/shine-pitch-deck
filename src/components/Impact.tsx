@@ -36,7 +36,7 @@ const Impact = () => {
             Transform firm economics
           </h2>
           <p className="subtitle mx-auto mt-4 text-center">
-            Numina doesn't just save unprofitable clients—it expands your addressable market.
+            Numina doesn't just save unprofitable clients, it expands your addressable market.
           </p>
         </div>
 

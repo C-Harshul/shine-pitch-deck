@@ -10,7 +10,7 @@ const features = [
     icon: RefreshCw,
     title: "Reconcile",
     subtitle: "Invoices to ledger. Automatically.",
-    description: "Extracts POs, invoices, and receipts from email—matches them to your ledger.",
+    description: "Extracts POs, invoices, and receipts from email, matches them to your ledger.",
     clickable: true,
     animationType: "reconcile"
   },

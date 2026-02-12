@@ -4,11 +4,6 @@ import Slide from "@/components/Slide";
 
 const painPoints = [
   {
-    icon: TrendingDown,
-    title: "Delayed Financial Visibility",
-    description: "Business owners don't know their true financial position until weeks after month-end."
-  },
-  {
     icon: Clock,
     title: "Reconciliation Overload",
     description: "CPAs spend the majority of their time on validation and error correction."
@@ -17,6 +12,11 @@ const painPoints = [
     icon: AlertTriangle,
     title: "Certification & Audit Delays",
     description: "Incomplete data triggers repeated back-and-forth with auditors."
+  },
+  {
+    icon: TrendingDown,
+    title: "Delayed Financial Visibility",
+    description: "Business owners don't know their true financial position until weeks after month-end."
   }
 ];
 

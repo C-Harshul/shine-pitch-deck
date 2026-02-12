@@ -5,7 +5,7 @@ const steps = [
     number: "01",
     icon: Link,
     title: "Connect your data sources",
-    description: "Emails, spreadsheets, files, invoices—wherever your clients' data lives. Numina ingests it automatically."
+    description: "Emails, spreadsheets, files, invoices, wherever your clients' data lives. Numina ingests it automatically."
   },
   {
     number: "02",

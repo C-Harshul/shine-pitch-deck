@@ -32,7 +32,8 @@ const HockeyStickSlide = () => {
   const [phase, setPhase] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [animatedData, setAnimatedData] = useState<typeof fullData>([]);
-  const [showZones, setShowZones] = useState({ marginal: false, coordination: false, system: false });
+  const [showZones, setShowZones] = useState({ linear: false, inflection: false, exponential: false });
+  const [showZoneLines, setShowZoneLines] = useState({ line40: false, line60: false });
   const [showNuminaPoint, setShowNuminaPoint] = useState(false);
   const [showYAxisLine, setShowYAxisLine] = useState(false);
   const [showMetrics, setShowMetrics] = useState(false);
@@ -43,7 +44,8 @@ const HockeyStickSlide = () => {
   const resetAnimation = useCallback(() => {
     setPhase(0);
     setAnimatedData([]);
-    setShowZones({ marginal: false, coordination: false, system: false });
+    setShowZones({ linear: false, inflection: false, exponential: false });
+    setShowZoneLines({ line40: false, line60: false });
     setShowNuminaPoint(false);
     setShowYAxisLine(false);
     setShowMetrics(false);
@@ -85,9 +87,11 @@ const HockeyStickSlide = () => {
     }
 
     if (phase === 2) {
-      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, marginal: true })), 500));
-      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, coordination: true })), 2500));
-      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, system: true })), 4500));
+      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, linear: true })), 500));
+      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, inflection: true })), 2500));
+      timers.push(setTimeout(() => setShowZoneLines(prev => ({ ...prev, line40: true })), 2800)); // Animate line at 40%
+      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, exponential: true })), 4500));
+      timers.push(setTimeout(() => setShowZoneLines(prev => ({ ...prev, line60: true })), 4800)); // Animate line at 60%
       timers.push(setTimeout(() => setPhase(3), 6000));
     }
 
@@ -144,8 +148,6 @@ const HockeyStickSlide = () => {
             <span className="bg-card/60 border border-border/50 rounded px-2 py-1">Structure data</span>
             <span className="text-primary">→</span>
             <span className="bg-card/60 border border-border/50 rounded px-2 py-1">Lower variance</span>
-            <span className="text-primary">→</span>
-            <span className="bg-card/60 border border-border/50 rounded px-2 py-1">Fewer exceptions</span>
             <span className="text-primary">→</span>
             <span className="bg-card/60 border border-border/50 rounded px-2 py-1">Higher capacity</span>
             <span className="text-primary">→</span>
@@ -219,17 +221,56 @@ const HockeyStickSlide = () => {
 
               {/* Zone highlighting */}
               <AnimatePresence>
-                {showZones.marginal && (
+                {showZones.linear && (
                   <ReferenceArea x1={0} x2={40} fill="hsl(var(--muted))" fillOpacity={0.15} />
                 )}
-                {showZones.coordination && (
+                {showZones.inflection && (
                   <ReferenceArea x1={40} x2={60} fill="hsl(var(--muted))" fillOpacity={0.15} />
                 )}
-                {showZones.system && (
+                {showZones.exponential && (
                   <ReferenceArea x1={60} x2={80} fill="hsl(var(--muted))" fillOpacity={0.15} />
                 )}
               </AnimatePresence>
 
+              {/* Zone boundary lines - animated */}
+              <AnimatePresence>
+                {showZoneLines.line40 && (
+                  <motion.g
+                    key="line-40"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  >
+                    <ReferenceLine
+                      x={40}
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeWidth={2}
+                      strokeDasharray="3 3"
+                      strokeOpacity={0.5}
+                    />
+                  </motion.g>
+                )}
+                {showZoneLines.line60 && (
+                  <motion.g
+                    key="line-60"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  >
+                    <ReferenceLine
+                      x={60}
+                      stroke="hsl(var(--muted-foreground))"
+                      strokeWidth={2}
+                      strokeDasharray="3 3"
+                      strokeOpacity={0.5}
+                    />
+                  </motion.g>
+                )}
+              </AnimatePresence>
+
+              {/* Numina impact line */}
               {showNuminaPoint && (
                 <ReferenceLine
                   x={70}
@@ -266,7 +307,7 @@ const HockeyStickSlide = () => {
 
           {/* Zone labels */}
           <AnimatePresence>
-            {showZones.marginal && (
+            {showZones.linear && (
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -274,13 +315,12 @@ const HockeyStickSlide = () => {
                 className="absolute left-[8%] top-[55%] text-xs md:text-sm"
               >
                 <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <div className="font-semibold text-foreground">MARGINAL GAINS</div>
-                  <div className="text-muted-foreground text-xs">Basic cleanup, simple fixes</div>
-                  <div className="text-muted-foreground text-xs">+1–2 clients per 10%</div>
+                  <div className="font-semibold text-foreground">LINEAR ZONE</div>
+                  <div className="text-muted-foreground text-sm">+1–2 clients per 10%</div>
                 </div>
               </motion.div>
             )}
-            {showZones.coordination && (
+            {showZones.inflection && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -288,13 +328,12 @@ const HockeyStickSlide = () => {
                 className="absolute left-[40%] top-[40%] text-xs md:text-sm"
               >
                 <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <div className="font-semibold text-foreground">COORDINATION GAINS</div>
-                  <div className="text-muted-foreground text-xs">Batching, fewer handoffs</div>
-                  <div className="text-muted-foreground text-xs">+3–5 clients per 10%</div>
+                  <div className="font-semibold text-foreground">INFLECTION ZONE</div>
+                  <div className="text-muted-foreground text-sm">+3–5 clients per 10%</div>
                 </div>
               </motion.div>
             )}
-            {showZones.system && (
+            {showZones.exponential && (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -302,9 +341,8 @@ const HockeyStickSlide = () => {
                 className="absolute right-[8%] top-[15%] text-xs md:text-sm"
               >
                 <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <div className="font-semibold text-foreground">SYSTEM-LEVEL GAINS</div>
-                  <div className="text-muted-foreground text-xs">Exception collapse, no context switching</div>
-                  <div className="text-muted-foreground text-xs">+6–10 clients per 10%</div>
+                  <div className="font-semibold text-foreground">EXPONENTIAL ZONE</div>
+                  <div className="text-muted-foreground text-sm">+6–10 clients per 10%</div>
                 </div>
               </motion.div>
             )}
@@ -317,7 +355,7 @@ const HockeyStickSlide = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className="absolute right-[2%] top-[5%]"
+                className="absolute right-[2%] top-[1%]"
               >
                 <div className="bg-card/80 border-2 border-primary/30 rounded-xl px-4 py-3 backdrop-blur-sm">
                   <div className="font-bold text-foreground text-lg">Numina Target</div>
@@ -334,13 +372,13 @@ const HockeyStickSlide = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className="absolute left-[10%] top-[22%] md:left-[10%]"
+                className="absolute left-[10%] bottom-[calc(60%-3.5rem)] md:left-[10%]"
               >
                 <div className="bg-card/80 border border-border rounded-xl p-4 backdrop-blur-sm space-y-3">
-                  <div className="text-sm font-medium text-muted-foreground mb-2">Before → After Numina</div>
+                  <div className="text-base font-medium text-muted-foreground mb-2">Before → After Numina</div>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <div className="text-muted-foreground">Sustainable clients</div>
+                      <div className="text-muted-foreground text-base">Sustainable clients</div>
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">15</span>
                         <span className="text-primary">→</span>
@@ -355,7 +393,7 @@ const HockeyStickSlide = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground">Task variance</div>
+                      <div className="text-muted-foreground text-base">Task variance</div>
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">±12h</span>
                         <span className="text-primary">→</span>
@@ -363,7 +401,7 @@ const HockeyStickSlide = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground">Exceptions/week</div>
+                      <div className="text-muted-foreground text-base">Exceptions/week</div>
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">18</span>
                         <span className="text-primary">→</span>
@@ -371,7 +409,7 @@ const HockeyStickSlide = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground">Capacity</div>
+                      <div className="text-muted-foreground text-base">Capacity</div>
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
@@ -383,7 +421,7 @@ const HockeyStickSlide = () => {
                     </div>
                   </div>
                   <div className="text-xs text-muted-foreground/70 pt-1 border-t border-border/30">
-                    Revenue scales through throughput—not longer hours.
+                    Revenue scales through throughput, not longer hours.
                   </div>
                 </div>
               </motion.div>
@@ -400,7 +438,7 @@ const HockeyStickSlide = () => {
                 className="absolute right-[5%] bottom-[15%] md:right-[10%]"
               >
                 <div className="bg-card/80 border border-border rounded-xl p-4 backdrop-blur-sm">
-                  <div className="text-sm font-medium text-muted-foreground mb-3">Effective Capacity Multiplier</div>
+                  <div className="text-base font-medium text-muted-foreground mb-3">Effective Capacity Multiplier</div>
                   <div className="space-y-2">
                     {[
                       { reduction: "20%", mult: "1.1×", color: "text-muted-foreground" },
@@ -474,7 +512,7 @@ const HockeyStickSlide = () => {
                     className="pt-6"
                   >
                     <div className="text-2xl font-bold text-gradient mb-2">
-                      More clients. Same hours. Higher quality.
+                      More clients. Same hours
                     </div>
                   </motion.div>
                 </div>
@@ -490,7 +528,7 @@ const HockeyStickSlide = () => {
           transition={{ delay: 1.5 }}
           className="text-center text-muted-foreground/60 text-xs mt-2"
         >
-          At high utilization, small reductions in process variance unlock outsized capacity gains—a well-documented effect in queueing theory and operations research.
+          At high utilization, small reductions in process variance unlock outsized capacity gains, a well-documented effect in queueing theory and operations research.
         </motion.div>
 
         {/* Hint */}

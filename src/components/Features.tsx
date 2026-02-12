@@ -5,7 +5,7 @@ const features = [
     icon: RefreshCw,
     title: "Reconcile",
     subtitle: "Invoices to ledger. Automatically.",
-    description: "Numina extracts POs, invoices, and receipts from email—matches them to your ledger—surfaces discrepancies for review."
+    description: "Numina extracts POs, invoices, and receipts from email, matches them to your ledger, surfaces discrepancies for review."
   },
   {
     icon: Flag,

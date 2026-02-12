@@ -6,7 +6,7 @@ const steps = [
     number: "01",
     icon: Link,
     title: "Connect",
-    description: "Emails, spreadsheets, invoices—wherever your clients' data lives."
+    description: "Emails, spreadsheets, invoices, wherever your clients' data lives."
   },
   {
     number: "02",

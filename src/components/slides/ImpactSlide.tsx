@@ -39,7 +39,7 @@ const ImpactSlide = () => {
         </div>
 
         <p className="text-muted-foreground/60 text-xs text-center mt-8 animate-fade-up delay-400">
-          Capacity gains driven by variance reduction and exception elimination—not longer work weeks.
+          Capacity gains driven by variance reduction and exception elimination, not longer work weeks.
         </p>
       </div>
     </Slide>
