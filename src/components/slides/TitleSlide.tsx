@@ -8,14 +8,20 @@ const TitleSlide = () => {
           <span className="text-gradient text-6xl md:text-7xl lg:text-8xl">Numina</span>
         </h1>
 
-        <p className="text-2xl md:text-3xl lg:text-4xl font-light text-muted-foreground mt-8 animate-fade-up delay-200">
-          Agents for Real-Time Closing
+        <p className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mt-8 animate-fade-up delay-200">
+          The future of accounting is{" "}
+          <span className="text-primary">Realtime Closing</span>
         </p>
 
-        <div className="mt-12 pt-8 border-t border-border/30 animate-fade-up delay-300">
-          <p className="text-lg text-muted-foreground">
-            Making every small business a firm's best client.
-          </p>
+        <div className="grid md:grid-cols-2 gap-6 mt-12 animate-fade-up delay-300">
+          <div className="feature-card text-left p-6">
+            <div className="text-muted-foreground/50 text-sm uppercase tracking-widest mb-2">Past</div>
+            <h3 className="text-2xl font-bold text-muted-foreground">Manual & Reactive</h3>
+          </div>
+          <div className="feature-card text-left p-6">
+            <div className="text-primary text-sm uppercase tracking-widest mb-2">Future</div>
+            <h3 className="text-2xl font-bold">Automated and proactive</h3>
+          </div>
         </div>
       </div>
     </Slide>
