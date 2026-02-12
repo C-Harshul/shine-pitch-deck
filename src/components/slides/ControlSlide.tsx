@@ -1,9 +1,9 @@
-import { Settings, Eye, CheckSquare } from "lucide-react";
+import { ScrollText, Eye, CheckSquare } from "lucide-react";
 import Slide from "@/components/Slide";
 
 const controls = [
   {
-    icon: Settings,
+    icon: ScrollText,
     title: "Accountants set the rules",
     description: "Define what gets flagged, auto-approved, or needs review"
   },

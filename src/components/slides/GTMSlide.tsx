@@ -26,7 +26,7 @@ const stages = [
 const GTMSlide = () => {
   return (
     <Slide>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <span className="text-primary text-sm font-medium tracking-widest uppercase mb-6 block animate-fade-up">
           Go-to-Market
         </span>
@@ -38,21 +38,21 @@ const GTMSlide = () => {
           Learn → Validate → Scale
         </p>
 
-        <div className="grid md:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-4 gap-6 md:gap-8">
           {stages.map((stage, index) => (
             <div 
               key={index}
-              className="feature-card relative animate-fade-up"
+              className="feature-card relative animate-fade-up p-6 md:p-8"
               style={{ animationDelay: `${300 + index * 100}ms` }}
             >
               {index < stages.length - 1 && (
                 <div className="hidden md:block absolute top-1/2 left-full w-4 h-px bg-primary/50 z-10" />
               )}
-              <span className="text-primary text-xs font-medium tracking-widest uppercase">
+              <span className="text-primary text-sm font-medium tracking-widest uppercase">
                 {stage.phase}
               </span>
-              <h3 className="text-xl font-bold mt-2 mb-3">{stage.title}</h3>
-              <p className="text-muted-foreground text-sm">
+              <h3 className="text-2xl md:text-3xl font-bold mt-3 mb-4">{stage.title}</h3>
+              <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
                 {stage.description}
               </p>
             </div>

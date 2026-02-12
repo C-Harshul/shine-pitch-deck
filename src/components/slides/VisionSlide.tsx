@@ -9,9 +9,8 @@ const VisionSlide = () => {
         </span>
 
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight animate-fade-up delay-100">
-          The future of accounting is
-          <br />
-          <span className="text-gradient">continuous, proactive, and advisory</span>
+          The future of accounting is{" "}
+          <span className="text-primary">Realtime Closing</span>
         </h2>
 
         <div className="grid md:grid-cols-2 gap-8 mt-16">

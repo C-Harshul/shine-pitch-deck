@@ -44,10 +44,6 @@ const HowItWorksSlide = () => {
               className="relative animate-fade-up"
               style={{ animationDelay: `${300 + index * 100}ms` }}
             >
-              {index < steps.length - 1 && (
-                <div className="hidden md:block absolute top-8 left-full w-full h-px bg-gradient-to-r from-primary/50 to-transparent z-0" />
-              )}
-              
               <div className="feature-card relative z-10 h-full text-center p-10">
                 <div className="step-number mx-auto mb-8 w-16 h-16">
                   <step.icon className="w-7 h-7" />

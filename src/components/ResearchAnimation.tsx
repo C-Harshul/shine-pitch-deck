@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, FileText, Database, Filter, Brain, Monitor, PenLine, Zap, HardDrive, Scissors, Cpu } from "lucide-react";
+import { X, FileText, Database, Filter, Monitor, PenLine, Zap, HardDrive, Scissors, Cpu, Sparkles } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -782,7 +782,7 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
                             : 'border-2 border-transparent'
                         }`}
                       >
-                        <Brain className="w-5 h-5 text-emerald-500" />
+                        <Sparkles className="w-5 h-5 text-emerald-500" />
                       </div>
                       <span className="text-[11px] text-foreground font-medium mt-1">LLM</span>
                     </div>

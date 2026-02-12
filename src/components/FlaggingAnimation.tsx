@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Monitor, Brain, Database, Bell, Shield, Zap, BookOpen, Cpu, User, RotateCcw, Save, Pencil, Check } from "lucide-react";
+import { X, Monitor, Database, Bell, Shield, Zap, BookOpen, Cpu, User, RotateCcw, Save, Pencil, Check, Sparkles } from "lucide-react";
 import { useEffect, useLayoutEffect, useState, useRef } from "react";
 
 interface FlaggingAnimationProps {
@@ -519,7 +519,7 @@ const FlaggingAnimation = ({ isOpen, onClose }: FlaggingAnimationProps) => {
                             </div>
                           </Draggable>
                           <Draggable id="llm-converter" position={pos("llm-converter")} onDragEnd={handleDragEnd} disabled={!isEditMode}>
-                            <Card icon={Brain} label="LLM Rule" sublabel="Converter" highlighted={phase === 1 || phase === 2 || phase === 3} />
+                            <Card icon={Sparkles} label="LLM Rule" sublabel="Converter" highlighted={phase === 1 || phase === 2 || phase === 3} />
                           </Draggable>
                         </div>
                       </div>

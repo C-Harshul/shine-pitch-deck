@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Receipt, ClipboardList, CheckCircle2, X, Mail, MessageSquare, Globe, Brain } from "lucide-react";
+import { FileText, Receipt, ClipboardList, CheckCircle2, X, Mail, MessageSquare, Globe, Sparkles, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface DocumentProcessingAnimationProps {
@@ -24,7 +24,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
       
       const timers: NodeJS.Timeout[] = [];
       
-      timers.push(setTimeout(() => setPhase(2), 2500)); // Enter brain
+      timers.push(setTimeout(() => setPhase(2), 2500)); // Enter center
       timers.push(setTimeout(() => setPhase(3), 5000)); // Processing
       // Start arrows from Numina to ledger only after processing is complete (phase 3 ends)
       timers.push(setTimeout(() => setPhase(4), 6500)); // Start arrows after processing phase completes
@@ -123,7 +123,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                 ))}
               </div>
 
-              {/* Animated Arrows flowing to brain */}
+              {/* Animated Arrows flowing to center */}
               <div className="flex flex-col gap-9 items-center justify-center w-[150px]">
                 {[0, 1, 2].map((i) => (
                   <motion.svg
@@ -164,7 +164,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                 ))}
               </div>
 
-              {/* Center: AI Brain */}
+              {/* Center: AI */}
               <div className="relative flex items-center justify-center mx-8">
                 <motion.div
                   animate={{
@@ -238,7 +238,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                     ))}
                   </svg>
 
-                  {/* Center core with Brain and Numina */}
+                  {/* Center core with Numina */}
                   <motion.div
                     animate={{
                       scale: phase >= 2 && phase < 4 ? [1, 1.15, 1] : 1
@@ -249,7 +249,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                     }}
                     className="flex flex-col items-center justify-center gap-2"
                   >
-                    <Brain className="w-16 h-16 text-primary" />
+                    <Sparkles className="w-16 h-16 text-primary" />
                     <span className="text-primary font-bold text-lg tracking-wide">Numina</span>
                   </motion.div>
 
@@ -266,7 +266,7 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                 </motion.div>
               </div>
 
-              {/* Animated Arrows flowing from brain */}
+              {/* Animated Arrows flowing from center */}
               <div className="flex flex-col gap-9 items-center justify-center w-[160px] -ml-4">
                 {[0, 1, 2].map((i) => (
                   <motion.svg
@@ -309,7 +309,8 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
 
               {/* Right: Ledger Output */}
               <div className="w-[260px] bg-muted/20 border border-border/50 rounded-lg overflow-hidden">
-                <div className="bg-muted/30 px-4 py-3 border-b border-border/50">
+                <div className="bg-muted/30 px-4 py-3 border-b border-border/50 flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-primary shrink-0" aria-hidden />
                   <span className="text-base font-semibold text-foreground">General Ledger</span>
                 </div>
                 <div className="p-3 space-y-2.5">
