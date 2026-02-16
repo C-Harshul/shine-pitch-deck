@@ -294,11 +294,11 @@ const HockeyStickSlide = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground text-base">Exceptions/week</div>
+                      <div className="text-muted-foreground text-base">Throughput time</div>
                       <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground">18</span>
+                        <span className="text-muted-foreground">5 days</span>
                         <span className="text-primary">→</span>
-                        <span className="text-foreground font-bold">5</span>
+                        <span className="text-foreground font-bold">2 days</span>
                       </div>
                     </div>
                     <div>

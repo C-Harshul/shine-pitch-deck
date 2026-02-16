@@ -1,4 +1,5 @@
 import Presentation from "@/components/Presentation";
+import AthenaSlide from "@/components/slides/AthenaSlide";
 import TitleSlide from "@/components/slides/TitleSlide";
 import InsightSlide from "@/components/slides/InsightSlide";
 import ProblemSlide from "@/components/slides/ProblemSlide";
@@ -16,6 +17,7 @@ import CTASlide from "@/components/slides/CTASlide";
 const Index = () => {
   return (
     <Presentation>
+      <AthenaSlide />
       <TitleSlide />
       <InsightSlide />
       <ProblemSlide />

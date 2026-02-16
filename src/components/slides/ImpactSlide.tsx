@@ -30,7 +30,7 @@ const ImpactSlide = () => {
               Our approach<span className="text-primary font-bold">?</span>
             </div>
             <div className="flex items-center justify-center my-5">
-              <span className="text-4xl font-bold">$6K–12K per firm</span>
+              <span className="text-4xl font-bold">$3K–6K per firm</span>
             </div>
             <p className="text-muted-foreground text-sm mt-2">
               At just 10% of captured value

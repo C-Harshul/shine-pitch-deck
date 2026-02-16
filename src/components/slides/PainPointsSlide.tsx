@@ -5,7 +5,7 @@ import Slide from "@/components/Slide";
 const painPoints = [
   {
     icon: Clock,
-    title: "Reconciliation Overload",
+    title: "Reconciliation overload",
     description: "CPAs spend the majority of their time on validation and error correction."
   },
   {
@@ -15,7 +15,7 @@ const painPoints = [
   },
   {
     icon: TrendingDown,
-    title: "Delayed Financial Visibility",
+    title: "Delayed financial visibility",
     description: "Business owners don't know their true financial position until weeks after month-end."
   }
 ];

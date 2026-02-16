@@ -57,12 +57,9 @@ const MomentumSlide = () => {
                 <col.icon className="w-6 h-6" />
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-4">{col.title}</h3>
-              <ul className="space-y-2.5 text-sm md:text-base text-muted-foreground leading-relaxed flex-1">
+              <ul className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed flex-1 list-none pl-0">
                 {col.bullets.map((bullet, i) => (
-                  <li key={i} className="flex gap-2">
-                    <span className="text-primary shrink-0 mt-1.5">•</span>
-                    <span>{bullet}</span>
-                  </li>
+                  <li key={i}>{bullet}</li>
                 ))}
               </ul>
             </div>
