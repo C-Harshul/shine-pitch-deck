@@ -4,8 +4,8 @@ const TitleSlide = () => {
   return (
     <Slide variant="centered">
       <div className="max-w-4xl mx-auto">
-        <h1 className="headline animate-fade-up delay-100">
-          <span className="text-gradient text-6xl md:text-7xl lg:text-8xl">Numina</span>
+        <h1 className="headline animate-fade-up delay-100 text-center">
+          <span className="text-gradient text-6xl md:text-7xl lg:text-8xl">NUMINA</span>
         </h1>
 
         <p className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mt-8 animate-fade-up delay-200">

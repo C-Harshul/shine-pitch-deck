@@ -16,15 +16,15 @@ const columns = [
     title: "Strategic Validation",
     bullets: [
       "Edward Collins (Recbooks) partnering to refine solution",
-      "Mercury: fee-free banking, invoicing, QuickBooks sync, AWS credits",
-      "Joseph McGee & advisors shaping GTM",
+      "Mercury: Free banking partner with perks for AWS, Quickbooks credits",
+      "Network of advisors shaping GTM",
     ],
   },
   {
     icon: TrendingUp,
     title: "Market Validation",
     bullets: [
-      "Citation-backed regulatory KB validated by users",
+      "Regulatory Knowledgebase problem and solution validated",
       "Demand for decision support, not just automation",
       "User-centered from day one",
     ],
@@ -70,8 +70,8 @@ const MomentumSlide = () => {
         </div>
 
         <div className="rounded-xl border border-primary/20 bg-card/50 backdrop-blur-sm px-5 py-4 md:px-6 md:py-5 animate-fade-up delay-400">
-          <p className="text-sm md:text-base text-muted-foreground leading-relaxed text-center max-w-4xl mx-auto">
-            Third-party validation from Mercury demonstrates external recognition of Numina's potential while eliminating significant operational overhead during the critical validation phase.
+          <p className="text-base md:text-lg text-muted-foreground leading-relaxed text-center max-w-4xl mx-auto">
+            With this momentum, the Conrades Fellowship will enable me to go all in on my entrepreneurial endeavor and work to incorporate, onboard paying clients, and finalize our pricing strategy.
           </p>
         </div>
       </div>

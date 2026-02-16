@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 interface ResearchAnimationProps {
   isOpen: boolean;
   onClose: () => void;
+  /** When true, render only the diagram (no modal shell). Used inside a shared modal. */
+  embedded?: boolean;
 }
 
 // Reusable horizontal arrow with traveling dot - centered between icons
@@ -139,7 +141,7 @@ const AnimatedReverseVerticalArrow = ({ active, height = 32, repeat = 0 }: { act
   </div>
 );
 
-const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
+const ResearchAnimation = ({ isOpen, onClose, embedded = false }: ResearchAnimationProps) => {
   const [phase, setPhase] = useState(0);
   const [queryPipelineHighlighted, setQueryPipelineHighlighted] = useState(false);
   const [ingestionPhase, setIngestionPhase] = useState(0);
@@ -293,53 +295,38 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
     }, 15000));
   };
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm"
+  const innerContent = (
+    <>
+      {!embedded && (
+        <button
           onClick={onClose}
+          className="absolute top-4 left-4 z-10 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] max-w-full max-h-full bg-card border border-border rounded-2xl overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 left-4 z-10 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* Continuous playback toggle */}
-            <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2 bg-muted/50 px-3 py-2 rounded-lg">
-              <Switch
-                id="continuous-playback"
-                checked={continuousPlayback}
-                onCheckedChange={setContinuousPlayback}
-              />
-              <Label htmlFor="continuous-playback" className="text-xs cursor-pointer">
-                Loop
-              </Label>
-            </div>
-
-            {/* Background grid */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="w-full h-full" style={{
-                backgroundImage: 'linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)',
-                backgroundSize: '40px 40px'
-              }} />
-            </div>
-
-            {/* Main container */}
-            <div className="relative w-full h-full flex flex-col items-center justify-center px-4 py-5 gap-1.5" style={{ minHeight: '100%' }}>
+          <X className="w-5 h-5" />
+        </button>
+      )}
+      {/* Continuous playback toggle */}
+      <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2 bg-muted/50 px-3 py-2 rounded-lg">
+        <Switch
+          id="continuous-playback"
+          checked={continuousPlayback}
+          onCheckedChange={setContinuousPlayback}
+        />
+        <Label htmlFor="continuous-playback" className="text-xs cursor-pointer">
+          Loop
+        </Label>
+      </div>
+      {/* Background grid (when standalone; when embedded parent provides it) */}
+      {!embedded && (
+        <div className="absolute inset-0 opacity-10">
+          <div className="w-full h-full" style={{
+            backgroundImage: 'linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)',
+            backgroundSize: '40px 40px'
+          }} />
+        </div>
+      )}
+      {/* Main container */}
+      <div className="relative w-full h-full flex flex-col items-center justify-center px-4 py-5 gap-1.5" style={{ minHeight: '100%' }}>
 
               {/* INGESTION PIPELINE */}
               <div 
@@ -801,7 +788,35 @@ const ResearchAnimation = ({ isOpen, onClose }: ResearchAnimationProps) => {
                 )}
               </div>
             </div>
+    </>
+  );
 
+  if (embedded) {
+    return (
+      <div className="relative w-full h-full min-h-0">
+        {innerContent}
+      </div>
+    );
+  }
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] max-w-full max-h-full bg-card border border-border rounded-2xl overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {innerContent}
           </motion.div>
         </motion.div>
       )}

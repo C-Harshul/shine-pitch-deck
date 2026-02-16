@@ -9,12 +9,12 @@ const SolutionSlide = () => {
           The Solution
         </span>
 
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight animate-fade-up delay-100">
-          Introducing Numina
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight animate-fade-up delay-100 text-center">
+          NUMINA
         </h2>
         
-        <p className="text-2xl md:text-3xl text-gradient font-semibold mt-4 animate-fade-up delay-200">
-          The AI layer for continuous financial closing
+        <p className="text-2xl md:text-3xl font-semibold mt-4 animate-fade-up delay-200">
+          The layer to enable <span className="text-primary">Realtime Closing</span>
         </p>
 
         <div className="feature-card max-w-2xl mx-auto mt-12 p-10 animate-fade-up delay-300">
@@ -22,10 +22,10 @@ const SolutionSlide = () => {
             <Zap className="w-5 h-5" />
           </div>
           
-          <p className="text-xl">
+          <p className="text-2xl md:text-3xl">
             We don't replace systems like QuickBooks.
           </p>
-          <p className="text-xl text-primary font-medium mt-2">
+          <p className="text-2xl md:text-3xl text-primary font-medium mt-6">
             We replace the manual chase that happens around them.
           </p>
         </div>

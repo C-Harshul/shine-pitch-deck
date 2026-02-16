@@ -6,19 +6,19 @@ const steps = [
     number: "01",
     icon: Link,
     title: "Connect",
-    description: "Emails, spreadsheets, invoices, wherever your clients' data lives."
+    description: "Emails, spreadsheets, invoices, wherever your CPA's clients' data lives."
   },
   {
     number: "02",
     icon: CheckCircle,
     title: "Validate",
-    description: "AI checks every entry against your rules. Incomplete? Flagged instantly."
+    description: "AI checks every entry against the CPA defined rules. Incomplete? Flagged instantly."
   },
   {
     number: "03",
     icon: Shield,
     title: "Close",
-    description: "You review and approve. Nothing hits the books without your sign-off."
+    description: "CPA reviews and approves. Nothing hits the books without their sign-off."
   }
 ];
 
@@ -31,7 +31,7 @@ const HowItWorksSlide = () => {
         </span>
 
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 animate-fade-up delay-100">
-          Connect. Validate. Close.
+          <span className="text-primary">User journey</span> on the platform
         </h2>
         <p className="text-xl text-muted-foreground mb-12 animate-fade-up delay-200">
           Three simple steps to cleaner books

@@ -1,17 +1,19 @@
-import { motion, AnimatePresence } from "framer-motion";
+  import { motion, AnimatePresence } from "framer-motion";
 import { X, Monitor, Database, Bell, Shield, Zap, BookOpen, Cpu, User, RotateCcw, Save, Pencil, Check, Sparkles } from "lucide-react";
 import { useEffect, useLayoutEffect, useState, useRef } from "react";
 
 interface FlaggingAnimationProps {
   isOpen: boolean;
   onClose: () => void;
+  /** When true, render only the diagram content (no modal shell). Used inside a shared modal. */
+  embedded?: boolean;
 }
 
 // Horizontal arrow with traveling dot (runs once per activation via onAnimationComplete)
 const AnimatedArrow = ({ active, delay = 0, width = 60, label, repeat = 1, reverse = false, onAnimationComplete }: { active: boolean; delay?: number; width?: number; label?: string; repeat?: number; reverse?: boolean; onAnimationComplete?: () => void }) => (
   <div className="flex flex-col items-center justify-center" style={{ minWidth: width }}>
     {label && (
-      <span className="text-sm text-muted-foreground mb-0.5 whitespace-nowrap italic">{label}</span>
+      <span className="text-base text-muted-foreground mb-0.5 whitespace-nowrap italic">{label}</span>
     )}
     <svg width={width} height="12" viewBox={`0 0 ${width} 12`} className="overflow-visible">
       {reverse ? (
@@ -31,7 +33,7 @@ const AnimatedArrow = ({ active, delay = 0, width = 60, label, repeat = 1, rever
               fill="hsl(var(--primary))"
               initial={{ cx: width, opacity: 0 }}
               animate={{ cx: [width, 8], opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 1.2, delay, repeat, ease: "easeInOut" }}
+              transition={{ duration: 0.9, delay, repeat, ease: "easeInOut" }}
               onAnimationComplete={onAnimationComplete}
             />
           )}
@@ -53,7 +55,7 @@ const AnimatedArrow = ({ active, delay = 0, width = 60, label, repeat = 1, rever
               fill="hsl(var(--primary))"
               initial={{ cx: 0, opacity: 0 }}
               animate={{ cx: [0, width - 8], opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 1.2, delay, repeat, ease: "easeInOut" }}
+              transition={{ duration: 0.9, delay, repeat, ease: "easeInOut" }}
               onAnimationComplete={onAnimationComplete}
             />
           )}
@@ -81,7 +83,7 @@ const AnimatedVerticalArrow = ({ active, height = 30, label, direction = "down",
             <motion.circle r="2" cx="6" fill="hsl(var(--primary))"
               initial={{ cy: 0, opacity: 0 }}
               animate={{ cy: [0, height - 6], opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 1.2, repeat, ease: "easeInOut" }}
+              transition={{ duration: 0.9, repeat, ease: "easeInOut" }}
               onAnimationComplete={onAnimationComplete}
             />
           )}
@@ -100,7 +102,7 @@ const AnimatedVerticalArrow = ({ active, height = 30, label, direction = "down",
             <motion.circle r="2" cx="6" fill="hsl(var(--primary))"
               initial={{ cy: height, opacity: 0 }}
               animate={{ cy: [height, 6], opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 1.2, repeat, ease: "easeInOut" }}
+              transition={{ duration: 0.9, repeat, ease: "easeInOut" }}
               onAnimationComplete={onAnimationComplete}
             />
           )}
@@ -108,7 +110,7 @@ const AnimatedVerticalArrow = ({ active, height = 30, label, direction = "down",
       )}
     </svg>
     {label && (
-      <span className="text-sm text-muted-foreground whitespace-nowrap italic">{label}</span>
+      <span className="text-base text-muted-foreground whitespace-nowrap italic">{label}</span>
     )}
   </div>
 );
@@ -284,7 +286,7 @@ const MAX_ARROW_SIZE = 200;
 // Module-level ref so "dot already shown" survives React Strict Mode unmount/remount
 const dotShownForPhaseRef = { current: {} as Record<number, boolean> };
 
-const FlaggingAnimation = ({ isOpen, onClose }: FlaggingAnimationProps) => {
+const FlaggingAnimation = ({ isOpen, onClose, embedded = false }: FlaggingAnimationProps) => {
   const [phase, setPhase] = useState(0);
   const [saveFeedback, setSaveFeedback] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -335,28 +337,28 @@ const FlaggingAnimation = ({ isOpen, onClose }: FlaggingAnimationProps) => {
       setPhase(0);
 
       // 1. Accountant → LLM (Plaintext Rule arrow), highlight Accountant + LLM
-      timersRef.current.push(setTimeout(() => setPhase(1), 500));
+      timersRef.current.push(setTimeout(() => setPhase(1), 400));
       // 2. QuickBooks → LLM (Context arrow), highlight QuickBooks + LLM
-      timersRef.current.push(setTimeout(() => setPhase(2), 2000));
+      timersRef.current.push(setTimeout(() => setPhase(2), 1600));
       // 3. LLM → Rules DB (Store JSON arrow), highlight LLM + Rules DB
-      timersRef.current.push(setTimeout(() => setPhase(3), 3500));
-      // 4. 2 sec pause, then Process transaction arrow, highlight QuickBooks + Rule Enforcement Engine
-      timersRef.current.push(setTimeout(() => setPhase(4), 5500));   // 3500 + 2000 pause
+      timersRef.current.push(setTimeout(() => setPhase(3), 2700));
+      // 4. Pause, then Process transaction arrow, highlight QuickBooks + Rule Enforcement Engine
+      timersRef.current.push(setTimeout(() => setPhase(4), 4200));
       // 5. Rules DB + Fetch rules arrow
-      timersRef.current.push(setTimeout(() => setPhase(5), 7500));
+      timersRef.current.push(setTimeout(() => setPhase(5), 5700));
       // 6. Flag non-compliance arrow + Flagging Service
-      timersRef.current.push(setTimeout(() => setPhase(6), 9500));
+      timersRef.current.push(setTimeout(() => setPhase(6), 7200));
       // 7. Alert arrow + Notification System
-      timersRef.current.push(setTimeout(() => setPhase(7), 11500));
+      timersRef.current.push(setTimeout(() => setPhase(7), 8700));
       // 8. Notify arrow + Auditor (complete flow)
-      timersRef.current.push(setTimeout(() => setPhase(8), 13500));
+      timersRef.current.push(setTimeout(() => setPhase(8), 10200));
 
       // Loop: reset phase and dot-shown refs so arrows run again next cycle
       timersRef.current.push(setTimeout(() => {
         setPhase(0);
         dotShownForPhaseRef.current = {};
-        setTimeout(runAnimation, 800);
-      }, 16000));
+        setTimeout(runAnimation, 600);
+      }, 12000));
     };
 
     runAnimation();
@@ -376,60 +378,53 @@ const FlaggingAnimation = ({ isOpen, onClose }: FlaggingAnimationProps) => {
     dotShownForPhaseRef.current[n] = true;
   };
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm"
-          onClick={onClose}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] max-w-full max-h-full bg-card border border-border rounded-2xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close, Edit mode toggle, Save layout (edit only), Reset layout (edit only) */}
-            <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-              <button onClick={onClose} className="p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors" title="Close">
-                <X className="w-5 h-5" />
-              </button>
-              <button onClick={() => setIsEditMode((v) => !v)} className={`p-2 rounded-full transition-colors flex items-center gap-1.5 text-sm ${isEditMode ? "bg-primary/20 hover:bg-primary/30 text-primary" : "bg-muted/50 hover:bg-muted"}`} title={isEditMode ? "Done editing" : "Edit layout"}>
-                {isEditMode ? <Check className="w-4 h-4" /> : <Pencil className="w-4 h-4" />}
-                <span className="hidden sm:inline">{isEditMode ? "Done" : "Edit"}</span>
-              </button>
-              {isEditMode && (
-                <>
-                  <button onClick={saveCurrentLayout} className="p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center gap-1.5 text-sm" title="Save current layout">
-                    <Save className="w-4 h-4" />
-                    <span className="hidden sm:inline">{saveFeedback ? "Saved!" : "Save layout"}</span>
-                  </button>
-                  <button onClick={resetLayout} className="p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center gap-1.5 text-sm" title="Reset layout to default">
-                    <RotateCcw className="w-4 h-4" />
-                    <span className="hidden sm:inline">Reset layout</span>
-                  </button>
-                </>
-              )}
-            </div>
+  const innerContent = (
+    <>
+      {/* Grid background (when standalone; when embedded the parent card provides it) */}
+      {!embedded && (
+        <div className="absolute inset-0 opacity-10">
+          <div className="w-full h-full" style={{
+            backgroundImage: 'linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)',
+            backgroundSize: '40px 40px'
+          }} />
+        </div>
+      )}
 
-            {/* Grid background */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="w-full h-full" style={{
-                backgroundImage: 'linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)',
-                backgroundSize: '40px 40px'
-              }} />
-            </div>
+      {!embedded && (
+        <>
+          {/* Title (only when standalone) */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 text-center">
+            <h3 className="text-xl font-bold text-primary">Numina — Automatic Flagging</h3>
+          </div>
+        </>
+      )}
 
-            {/* Title */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 text-center">
-              <h3 className="text-lg font-bold text-foreground">Numina — Automatic Flagging</h3>
-            </div>
+      {/* Toolbar: Close (when standalone), Edit, Save, Reset */}
+      <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+        {!embedded && (
+          <button onClick={onClose} className="p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors" title="Close">
+            <X className="w-5 h-5" />
+          </button>
+        )}
+        <button onClick={() => setIsEditMode((v) => !v)} className={`p-2 rounded-full transition-colors flex items-center gap-1.5 text-sm ${isEditMode ? "bg-primary/20 hover:bg-primary/30 text-primary" : "bg-muted/50 hover:bg-muted"}`} title={isEditMode ? "Done editing" : "Edit layout"}>
+          {isEditMode ? <Check className="w-4 h-4" /> : <Pencil className="w-4 h-4" />}
+          <span className="hidden sm:inline">{isEditMode ? "Done" : "Edit"}</span>
+        </button>
+        {isEditMode && (
+          <>
+            <button onClick={saveCurrentLayout} className="p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center gap-1.5 text-sm" title="Save current layout">
+              <Save className="w-4 h-4" />
+              <span className="hidden sm:inline">{saveFeedback ? "Saved!" : "Save layout"}</span>
+            </button>
+            <button onClick={resetLayout} className="p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center gap-1.5 text-sm" title="Reset layout to default">
+              <RotateCcw className="w-4 h-4" />
+              <span className="hidden sm:inline">Reset layout</span>
+            </button>
+          </>
+        )}
+      </div>
 
-            <div className="relative w-full h-full pt-12 sm:pt-14 pb-6 sm:pb-8 px-6 sm:px-8 lg:px-10 flex flex-col items-center justify-center overflow-auto">
+      <div className={`relative w-full h-full flex flex-col items-center justify-center overflow-auto ${embedded ? "pt-12 sm:pt-14 pb-6 sm:pb-8 px-6 sm:px-8 lg:px-10" : "pt-12 sm:pt-14 pb-6 sm:pb-8 px-6 sm:px-8 lg:px-10"}`}>
               <div className="flex flex-col items-center gap-4 sm:gap-5 w-full max-w-6xl">
                 {/* Row 1: QuickBooks (with Context down) | Arrow | Transaction Queue | Process | Rule Enforcement | Alert | Notification | Notify | Auditor — all on same horizontal line */}
                 <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 md:gap-3">
@@ -534,7 +529,35 @@ const FlaggingAnimation = ({ isOpen, onClose }: FlaggingAnimationProps) => {
                 </div>
               </div>
             </div>
+    </>
+  );
 
+  if (embedded) {
+    return (
+      <div className="relative w-full h-full min-h-0">
+        {innerContent}
+      </div>
+    );
+  }
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative w-[calc(100vw-2rem)] h-[calc(100vh-2rem)] max-w-full max-h-full bg-card border border-border rounded-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {innerContent}
           </motion.div>
         </motion.div>
       )}

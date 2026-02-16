@@ -10,8 +10,8 @@ const painPoints = [
   },
   {
     icon: AlertTriangle,
-    title: "Certification & Audit Delays",
-    description: "Incomplete data triggers repeated back-and-forth with auditors."
+    title: "Compliance and audit delays",
+    description: "Incomplete data, triggers repeated back and forth and delays because of compliance and tax rules create a bottleneck."
   },
   {
     icon: TrendingDown,

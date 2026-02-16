@@ -43,8 +43,8 @@ const InsightSlide = () => {
             </div>
           </div>
 
-          <p className="mt-12 max-w-2xl mx-auto text-center text-muted-foreground text-base md:text-lg leading-relaxed animate-fade-up delay-200">
-            We didn't build a solution and then try to sell it. From the outset, we spoke with industry stakeholders to understand their problems and built specifically for their needs.
+          <p className="mt-12 max-w-2xl mx-auto text-center text-muted-foreground text-lg md:text-xl leading-relaxed animate-fade-up delay-200">
+            Built around a stakeholder-validated problem from day one.
           </p>
         </div>
       </div>

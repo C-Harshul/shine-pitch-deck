@@ -25,8 +25,8 @@ const Index = () => {
       <FeaturesSlide />
       <ControlSlide />
       <HockeyStickSlide />
-      <ImpactSlide />
       <MarketExpansionSlide />
+      <ImpactSlide />
       <MomentumSlide />
       <CTASlide />
     </Presentation>

@@ -7,7 +7,6 @@ import {
   YAxis,
   ResponsiveContainer,
   ReferenceLine,
-  ReferenceArea,
 } from "recharts";
 import Slide from "@/components/Slide";
 import { Play, RotateCcw } from "lucide-react";
@@ -32,25 +31,19 @@ const HockeyStickSlide = () => {
   const [phase, setPhase] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [animatedData, setAnimatedData] = useState<typeof fullData>([]);
-  const [showZones, setShowZones] = useState({ linear: false, inflection: false, exponential: false });
-  const [showZoneLines, setShowZoneLines] = useState({ line40: false, line60: false });
   const [showNuminaPoint, setShowNuminaPoint] = useState(false);
   const [showYAxisLine, setShowYAxisLine] = useState(false);
   const [showMetrics, setShowMetrics] = useState(false);
   const [clientCount, setClientCount] = useState(15);
-  const [showCapacity, setShowCapacity] = useState(false);
   const [showClosing, setShowClosing] = useState(false);
 
   const resetAnimation = useCallback(() => {
     setPhase(0);
     setAnimatedData([]);
-    setShowZones({ linear: false, inflection: false, exponential: false });
-    setShowZoneLines({ line40: false, line60: false });
     setShowNuminaPoint(false);
     setShowYAxisLine(false);
     setShowMetrics(false);
     setClientCount(15);
-    setShowCapacity(false);
     setShowClosing(false);
     setIsPlaying(false);
   }, []);
@@ -87,12 +80,7 @@ const HockeyStickSlide = () => {
     }
 
     if (phase === 2) {
-      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, linear: true })), 500));
-      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, inflection: true })), 2500));
-      timers.push(setTimeout(() => setShowZoneLines(prev => ({ ...prev, line40: true })), 2800)); // Animate line at 40%
-      timers.push(setTimeout(() => setShowZones(prev => ({ ...prev, exponential: true })), 4500));
-      timers.push(setTimeout(() => setShowZoneLines(prev => ({ ...prev, line60: true })), 4800)); // Animate line at 60%
-      timers.push(setTimeout(() => setPhase(3), 6000));
+      timers.push(setTimeout(() => setPhase(3), 1500));
     }
 
     if (phase === 3) {
@@ -111,15 +99,14 @@ const HockeyStickSlide = () => {
       }, 50);
       timers.push(countInterval as unknown as NodeJS.Timeout);
 
-      timers.push(setTimeout(() => setPhase(4), 5000));
+      timers.push(setTimeout(() => setPhase(4), 2500));
     }
 
     if (phase === 4) {
-      timers.push(setTimeout(() => setShowCapacity(true), 500));
       timers.push(setTimeout(() => {
         setIsPlaying(false);
         setPhase(5);
-      }, 5000));
+      }, 1200));
     }
 
     return () => {
@@ -200,7 +187,7 @@ const HockeyStickSlide = () => {
                   value: "Variance Reduction (%)",
                   position: "bottom",
                   fill: "hsl(var(--muted-foreground))",
-                  fontSize: 12,
+                  fontSize: 16,
                 }}
               />
               <YAxis
@@ -210,65 +197,14 @@ const HockeyStickSlide = () => {
                 axisLine={{ stroke: "hsl(var(--border))" }}
                 domain={[0, 40]}
                 label={{
-                  value: "Sustainable Clients per Accountant (at target SLA)",
+                  value: "Clients",
                   angle: -90,
                   position: "insideLeft",
                   fill: "hsl(var(--muted-foreground))",
-                  fontSize: 10,
+                  fontSize: 16,
                   dx: -10,
                 }}
               />
-
-              {/* Zone highlighting */}
-              <AnimatePresence>
-                {showZones.linear && (
-                  <ReferenceArea x1={0} x2={40} fill="hsl(var(--muted))" fillOpacity={0.15} />
-                )}
-                {showZones.inflection && (
-                  <ReferenceArea x1={40} x2={60} fill="hsl(var(--muted))" fillOpacity={0.15} />
-                )}
-                {showZones.exponential && (
-                  <ReferenceArea x1={60} x2={80} fill="hsl(var(--muted))" fillOpacity={0.15} />
-                )}
-              </AnimatePresence>
-
-              {/* Zone boundary lines - animated */}
-              <AnimatePresence>
-                {showZoneLines.line40 && (
-                  <motion.g
-                    key="line-40"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                  >
-                    <ReferenceLine
-                      x={40}
-                      stroke="hsl(var(--muted-foreground))"
-                      strokeWidth={2}
-                      strokeDasharray="3 3"
-                      strokeOpacity={0.5}
-                    />
-                  </motion.g>
-                )}
-                {showZoneLines.line60 && (
-                  <motion.g
-                    key="line-60"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                  >
-                    <ReferenceLine
-                      x={60}
-                      stroke="hsl(var(--muted-foreground))"
-                      strokeWidth={2}
-                      strokeDasharray="3 3"
-                      strokeOpacity={0.5}
-                    />
-                  </motion.g>
-                )}
-              </AnimatePresence>
 
               {/* Numina impact line */}
               {showNuminaPoint && (
@@ -304,49 +240,6 @@ const HockeyStickSlide = () => {
               />
             </AreaChart>
           </ResponsiveContainer>
-
-          {/* Zone labels */}
-          <AnimatePresence>
-            {showZones.linear && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="absolute left-[8%] top-[55%] text-xs md:text-sm"
-              >
-                <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <div className="font-semibold text-foreground">LINEAR ZONE</div>
-                  <div className="text-muted-foreground text-sm">+1–2 clients per 10%</div>
-                </div>
-              </motion.div>
-            )}
-            {showZones.inflection && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="absolute left-[40%] top-[40%] text-xs md:text-sm"
-              >
-                <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <div className="font-semibold text-foreground">INFLECTION ZONE</div>
-                  <div className="text-muted-foreground text-sm">+3–5 clients per 10%</div>
-                </div>
-              </motion.div>
-            )}
-            {showZones.exponential && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="absolute right-[8%] top-[15%] text-xs md:text-sm"
-              >
-                <div className="bg-muted/30 border border-border rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <div className="font-semibold text-foreground">EXPONENTIAL ZONE</div>
-                  <div className="text-muted-foreground text-sm">+6–10 clients per 10%</div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Numina Impact Callout */}
           <AnimatePresence>
@@ -422,44 +315,6 @@ const HockeyStickSlide = () => {
                   </div>
                   <div className="text-xs text-muted-foreground/70 pt-1 border-t border-border/30">
                     Revenue scales through throughput, not longer hours.
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Effective Capacity Multiplier */}
-          <AnimatePresence>
-            {showCapacity && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className="absolute right-[5%] bottom-[15%] md:right-[10%]"
-              >
-                <div className="bg-card/80 border border-border rounded-xl p-4 backdrop-blur-sm">
-                  <div className="text-base font-medium text-muted-foreground mb-3">Effective Capacity Multiplier</div>
-                  <div className="space-y-2">
-                    {[
-                      { reduction: "20%", mult: "1.1×", color: "text-muted-foreground" },
-                      { reduction: "40%", mult: "1.3×", color: "text-muted-foreground" },
-                      { reduction: "60%", mult: "1.7×", color: "text-muted-foreground" },
-                      { reduction: "70%", mult: "2.0×", color: "text-foreground", highlight: true },
-                      { reduction: "80%", mult: "2.3×", color: "text-muted-foreground" },
-                    ].map((item, i) => (
-                      <motion.div
-                        key={item.reduction}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.15, duration: 0.4, ease: "easeOut" }}
-                        className={`flex justify-between items-center gap-6 ${item.highlight ? "bg-primary/10 -mx-2 px-2 py-1 rounded" : ""}`}
-                      >
-                        <span className={item.color}>{item.reduction}</span>
-                        <span className={`font-bold ${item.highlight ? "text-lg text-primary" : ""}`}>
-                          {item.mult}
-                        </span>
-                      </motion.div>
-                    ))}
                   </div>
                 </div>
               </motion.div>
