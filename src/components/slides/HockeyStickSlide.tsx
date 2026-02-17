@@ -11,15 +11,30 @@ import {
 import Slide from "@/components/Slide";
 import { Play, RotateCcw } from "lucide-react";
 
-// Capacity curve: y = 15 + (0.00306 * x²)
-// At 70% reduction → ~30 clients (2x baseline of 15)
+// Capacity curve: derived capacity equation from P–K (see appendix).
+// y(x) = Y0 · M(x/100), M(r) = [1 + α(1 + C_s²)] / [1 + α(1 + (1−r)C_s²)], α = ρ/(2(1−ρ)).
+// Assumptions: M/G/1, steady state, variance reduction = reduction in Var(service time), ρ unchanged.
+// Parameters: ρ = 0.9, C_s² = 3, Y0 = 15 → α = 4.5; at 70% reduction, y ≈ 30 (2× baseline).
+const RHO = 0.9;
+const C_SQ = 3;
+const Y0 = 15;
+const ALPHA = RHO / (2 * (1 - RHO));
+
+function capacityFromPK(x: number): number {
+  const r = x / 100;
+  const num = 1 + ALPHA * (1 + C_SQ);
+  const den = 1 + ALPHA * (1 + (1 - r) * C_SQ);
+  return Y0 * (num / den);
+}
+
 const generateData = () => {
   const points = [];
   for (let x = 0; x <= 80; x += 2) {
+    const y = capacityFromPK(x);
     points.push({
       x,
-      y: 15 + 0.00306 * x * x,
-      capacityMultiplier: (15 + 0.00306 * x * x) / 15,
+      y,
+      capacityMultiplier: y / Y0,
     });
   }
   return points;
@@ -381,9 +396,9 @@ const HockeyStickSlide = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
-          className="text-center text-muted-foreground/60 text-xs mt-2"
+          className="text-center text-muted-foreground/60 text-xs mt-2 max-w-3xl mx-auto"
         >
-          At high utilization, small reductions in process variance unlock outsized capacity gains, a well-documented effect in queueing theory and operations research.
+          Curve from derived capacity equation y(x) = Y<sub>0</sub>·M(x/100) (P–K, M/G/1; ρ = 0.9, C<sub>s</sub>² = 3, Y<sub>0</sub> = 15). Full derivation and assumptions in appendix.
         </motion.div>
 
         {/* Hint */}

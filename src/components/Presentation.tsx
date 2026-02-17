@@ -1,19 +1,24 @@
 import { useState, useCallback, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Maximize, Minimize } from "lucide-react";
 import { cn } from "@/lib/utils";
+import PresentationContext, { type PresentationContextValue } from "@/contexts/PresentationContext";
 
 interface PresentationProps {
   children: React.ReactNode[];
+  /** Number of main content slides (after Athena). Counter/progress bar only show for these; appendix is excluded. */
+  contentSlideCount?: number;
 }
 
-const Presentation = ({ children }: PresentationProps) => {
+const Presentation = ({ children, contentSlideCount: contentSlideCountProp }: PresentationProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [isAnimating, setIsAnimating] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const totalSlides = children.length;
+  const contentSlideCount = contentSlideCountProp ?? totalSlides - 1;
+  const isInAppendix = currentSlide > contentSlideCount;
 
-  const goToSlide = useCallback((index: number, dir: "next" | "prev") => {
+  const goToSlide = useCallback((index: number, dir: "next" | "prev" = "next") => {
     if (isAnimating) return;
     setIsAnimating(true);
     setDirection(dir);
@@ -94,7 +99,15 @@ const Presentation = ({ children }: PresentationProps) => {
     }
   };
 
+  const contextValue: PresentationContextValue = {
+    goToSlide,
+    currentSlide,
+    totalSlides,
+    contentSlideCount,
+  };
+
   return (
+    <PresentationContext.Provider value={contextValue}>
     <div 
       className="h-screen w-screen overflow-hidden bg-background relative cursor-pointer"
       onClick={handleClick}
@@ -168,35 +181,39 @@ const Presentation = ({ children }: PresentationProps) => {
         <ChevronRight className="w-5 h-5" />
       </button>
 
-      {/* Progress bar (hidden on Athena / settling slide) */}
-      {currentSlide > 0 && (
+      {/* Progress bar (main content only; hidden on Athena and in appendix) */}
+      {currentSlide > 0 && !isInAppendix && (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2">
-          {children.slice(1).map((_, index) => (
-            <button
-              key={index}
-              onClick={(e) => { 
-                e.stopPropagation(); 
-                goToSlide(index + 1, index + 1 > currentSlide ? "next" : "prev"); 
-              }}
-              className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
-                index + 1 === currentSlide 
-                  ? "w-8 bg-primary" 
-                  : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
-              )}
-            />
-          ))}
+          {Array.from({ length: contentSlideCount }).map((_, index) => {
+            const slideIndex = index + 1;
+            return (
+              <button
+                key={index}
+                onClick={(e) => { 
+                  e.stopPropagation(); 
+                  goToSlide(slideIndex, slideIndex > currentSlide ? "next" : "prev"); 
+                }}
+                className={cn(
+                  "h-1.5 rounded-full transition-all duration-300",
+                  slideIndex === currentSlide 
+                    ? "w-8 bg-primary" 
+                    : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                )}
+              />
+            );
+          })}
         </div>
       )}
 
-      {/* Slide counter (skip first slide — settling / Athena) */}
-      {currentSlide > 0 && (
+      {/* Slide counter (main content only; hidden on Athena and in appendix) */}
+      {currentSlide > 0 && !isInAppendix && (
         <div className="absolute bottom-8 right-8 z-50 text-sm text-muted-foreground font-medium">
-          {currentSlide} / {totalSlides - 1}
+          {currentSlide} / {contentSlideCount}
         </div>
       )}
 
     </div>
+    </PresentationContext.Provider>
   );
 };
 
