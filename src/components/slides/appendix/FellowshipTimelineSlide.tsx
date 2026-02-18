@@ -10,7 +10,7 @@ const phases = [
   },
   {
     title: "Phase 2: Pilot & GTM (Months 2–4)",
-    items: ["Targeted outreach via LinkedIn, CPA associations, referrals", "30–60 day pilots with 2–3 CPAs", "Client-deployable version; measure time savings", "Dartmouth Anthropic/AWS partnership exploration"],
+    items: ["Targeted outreach via LinkedIn, CPA associations, referrals", "30–60 day pilots with 2–3 CPAs", "Client-deployable version; measure time savings", "Dartmouth Anthropic/AWS partnership exploration", "SOC2 compliance roadmap and target"],
     deliverable: "Pilot results (10+ hours saved/CPA monthly, testimonials)",
   },
   {
@@ -45,7 +45,7 @@ const FellowshipTimelineSlide = () => {
           Project plan: fellowship work program
         </h2>
         <p className="text-muted-foreground text-lg mb-4">
-          Nine-month timeline and deliverables
+          Nine-month timeline and deliverables; we aim to achieve SOC2 compliance during the fellowship.
         </p>
 
         <div className="space-y-4 max-h-[68vh] overflow-y-auto pr-2">

@@ -3,14 +3,15 @@ import { usePresentation } from "@/contexts/PresentationContext";
 import { ChevronRight } from "lucide-react";
 
 const APPENDIX_TOC = [
-  { title: "T-shaped intelligence", indexOffset: 1 },
-  { title: "Strategic positioning & user", indexOffset: 2 },
-  { title: "Fellowship timeline", indexOffset: 3 },
-  { title: "Team", indexOffset: 4 },
-  { title: "Resources & support", indexOffset: 5 },
-  { title: "Variance equation & capacity maths", indexOffset: 6 },
-  { title: "Detailed feature animations", indexOffset: 7 },
-  { title: "Full report (PDF)", indexOffset: 8 },
+  { title: "Market, competitive & positioning (documents)", indexOffset: 1 },
+  { title: "Team", indexOffset: 2 },
+  { title: "T-shaped intelligence", indexOffset: 3 },
+  { title: "Strategic positioning & user", indexOffset: 4 },
+  { title: "Fellowship timeline", indexOffset: 5 },
+  { title: "Resources & support", indexOffset: 6 },
+  { title: "Variance equation & capacity maths", indexOffset: 7 },
+  { title: "Detailed feature animations", indexOffset: 8 },
+  { title: "Full report (PDF)", indexOffset: 9 },
 ];
 
 const AppendixTitleSlide = () => {

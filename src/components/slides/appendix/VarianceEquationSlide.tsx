@@ -31,6 +31,7 @@ const VarianceEquationSlide = () => {
               <li><strong className="text-foreground">A4.</strong> Variance reduction: we reduce Var(S) by fraction r ∈ [0, 1], so Var(S)′ = (1−r) Var(S). Mean E[S] is unchanged. Hence C<sub>s</sub>²′ = (1−r) C<sub>s</sub>².</li>
               <li><strong className="text-foreground">A5.</strong> Utilization ρ is unchanged after variance reduction (same λ and E[S]; only variance changes).</li>
               <li><strong className="text-foreground">A6.</strong> Sustainable client count: capacity (clients per unit time) ∝ 1/T, where T = mean throughput time (sojourn time) per client. Baseline Y<sub>0</sub> at r = 0; after reduction r, capacity scales by T(0)/T(r).</li>
+              <li><strong className="text-foreground">A7.</strong> Client abandonment and admission control: excessive queueing delay may lead to (i) client abandonment (reneging), or (ii) proactive turning away of clients by the CPA. The baseline M/G/1 derivation below assumes no abandonment (standard P–K steady-state framework); the derived capacity multiplier is therefore a <strong>conservative estimate</strong>.</li>
             </ul>
           </div>
 
@@ -87,6 +88,19 @@ const VarianceEquationSlide = () => {
             </div>
             <p className="text-muted-foreground text-sm">
               This is the equation used on the capacity slide (slide 9). Parameters there: ρ = 0.9, C<sub>s</sub>² = 3, Y<sub>0</sub> = 15.
+            </p>
+          </div>
+
+          <div className="feature-card p-6">
+            <h3 className="text-lg font-bold mb-3 text-primary">Extension — Abandonment and admission control (A7)</h3>
+            <p className="text-muted-foreground text-sm mb-2">
+              When waiting time exceeds a tolerance threshold <em>W</em><sub>max</sub>, clients may renege or be turned away. The effective arrival rate that is actually served is:
+            </p>
+            <div className="bg-muted/30 rounded-lg p-4 font-mono text-sm overflow-x-auto mb-2">
+              λ<sub>realized</sub> = λ · P(W<sub>q</sub> ≤ <em>W</em><sub>max</sub>)
+            </div>
+            <p className="text-muted-foreground text-sm mb-2">
+              Since W<sub>q</sub> increases in C<sub>s</sub>² (P–K), variance reduction <strong>lowers</strong> W<sub>q</sub> and thus <strong>increases</strong> P(W<sub>q</sub> ≤ <em>W</em><sub>max</sub>), so λ<sub>realized</sub> and realized capacity increase further. This extension <strong>strengthens</strong> — rather than alters — the main result: reducing service-time variance increases sustainable client capacity.
             </p>
           </div>
 

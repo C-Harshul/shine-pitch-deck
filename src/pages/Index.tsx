@@ -24,6 +24,7 @@ import ResourcesSlide from "@/components/slides/appendix/ResourcesSlide";
 import VarianceEquationSlide from "@/components/slides/appendix/VarianceEquationSlide";
 import DetailedAnimationsSlide from "@/components/slides/appendix/DetailedAnimationsSlide";
 import ReportLinkSlide from "@/components/slides/appendix/ReportLinkSlide";
+import AppendixDocumentsSlide from "@/components/slides/appendix/AppendixDocumentsSlide";
 
 const Index = () => {
   return (
@@ -45,10 +46,11 @@ const Index = () => {
         <CTASlide />
         {/* Appendix */}
         <AppendixTitleSlide />
+        <AppendixDocumentsSlide />
+        <TeamSlide />
         <TShapedSlide />
         <StrategicPositioningSlide />
         <FellowshipTimelineSlide />
-        <TeamSlide />
         <ResourcesSlide />
         <VarianceEquationSlide />
         <DetailedAnimationsSlide />

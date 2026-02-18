@@ -16,7 +16,7 @@ const columns = [
     title: "Strategic Validation",
     bullets: [
       "Edward Collins (Recbooks) partnering to refine solution",
-      "Mercury: Free banking partner with perks for AWS, Quickbooks credits",
+      "Mercury: Banking partner with perks for AWS, Quickbooks credits",
       "Network of advisors shaping GTM",
     ],
   },
@@ -68,7 +68,7 @@ const MomentumSlide = () => {
 
         <div className="rounded-xl border border-primary/20 bg-card/50 backdrop-blur-sm px-5 py-4 md:px-6 md:py-5 animate-fade-up delay-400">
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed text-center max-w-4xl mx-auto">
-            With this momentum, the Conrades Fellowship will enable me to go all in on my entrepreneurial endeavor and work to incorporate, onboard paying clients, and finalize our pricing strategy.
+            <span className="block">The accounting industry is at the cusp of a revolution, and through Numina I aim to help enable it.The Conrades Fellowship would empower me to dedicate myself fully to turning this vision into reality.</span>
           </p>
         </div>
       </div>
