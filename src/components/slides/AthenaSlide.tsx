@@ -12,8 +12,8 @@ const AthenaSlide = () => {
           alt="Athena"
           className="w-52 h-52 md:w-64 md:h-64 object-contain"
         />
-        <p className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-center text-foreground max-w-2xl">
-          The Future of accounting is Realtime Closing
+        <p className="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-center text-muted-foreground max-w-2xl">
+          The Future of accounting is <span className="text-foreground">Realtime Closing</span>
         </p>
       </div>
     </Slide>
