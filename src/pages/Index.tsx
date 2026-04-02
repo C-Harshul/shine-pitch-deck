@@ -10,7 +10,6 @@ import HowItWorksSlide from "@/components/slides/HowItWorksSlide";
 import FeaturesSlide from "@/components/slides/FeaturesSlide";
 import HockeyStickSlide from "@/components/slides/HockeyStickSlide";
 import ControlSlide from "@/components/slides/ControlSlide";
-import ImpactSlide from "@/components/slides/ImpactSlide";
 import MarketExpansionSlide from "@/components/slides/MarketExpansionSlide";
 import MomentumSlide from "@/components/slides/MomentumSlide";
 import CTASlide from "@/components/slides/CTASlide";
