@@ -14,6 +14,7 @@ import MarketExpansionSlide from "@/components/slides/MarketExpansionSlide";
 import MomentumSlide from "@/components/slides/MomentumSlide";
 import CTASlide from "@/components/slides/CTASlide";
 
+
 const Index = () => {
   return (
     <FeatureModalsProvider>
