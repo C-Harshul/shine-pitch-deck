@@ -18,7 +18,7 @@ import CTASlide from "@/components/slides/CTASlide";
 const Index = () => {
   return (
     <FeatureModalsProvider>
-      <Presentation contentSlideCount={12}>
+      <Presentation contentSlideCount={11}>
         <TitleSlide />
         <InsightSlide />
         <ProblemSlide />
@@ -29,7 +29,6 @@ const Index = () => {
         <ControlSlide />
         <HockeyStickSlide />
         <MarketExpansionSlide />
-        <MomentumSlide />
         <CTASlide />
       </Presentation>
       <FeatureModals />
