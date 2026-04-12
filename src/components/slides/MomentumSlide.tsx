@@ -36,15 +36,6 @@ const columns: Column[] = [
       "User-centered from day one",
     ],
   },
-  {
-    logo: "/dartmouth-logo.png",
-    title: "Institutional Backing",
-    bullets: [
-      "Backed by Dartmouth's Conrades Distinguished Fellowship",
-      "Magnuson Center for Entrepreneurship support",
-      "Access to alumni network for mentorship",
-    ],
-  },
 ];
 
 const MomentumSlide = () => {
@@ -62,7 +53,7 @@ const MomentumSlide = () => {
           We've validated the problem and proven the solution
         </p>
 
-        <div className="grid md:grid-cols-4 gap-6 lg:gap-8 mb-10">
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-10">
           {columns.map((col, index) => (
             <div
               key={index}
@@ -88,9 +79,10 @@ const MomentumSlide = () => {
           ))}
         </div>
 
-        <div className="rounded-xl border border-primary/20 bg-card/50 backdrop-blur-sm px-5 py-4 md:px-6 md:py-5 animate-fade-up delay-400">
-          <p className="text-base md:text-lg text-muted-foreground leading-relaxed text-center max-w-4xl mx-auto">
-            <span className="block">The accounting industry is at the cusp of a revolution, and through Numina I aim to help enable it.The Conrades Fellowship would empower me to dedicate myself fully to turning this vision into reality.</span>
+        <div className="rounded-xl border border-primary/20 bg-card/50 backdrop-blur-sm px-5 py-4 md:px-6 md:py-5 animate-fade-up delay-400 flex items-center justify-center gap-4">
+          <img src="/dartmouth-logo.png" alt="Dartmouth" className="h-10 w-auto invert brightness-200" />
+          <p className="text-base md:text-lg text-foreground font-semibold">
+            Backed by Dartmouth's <span className="text-primary">Conrades Distinguished Fellowship</span>
           </p>
         </div>
       </div>
