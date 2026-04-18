@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { RefreshCw, Flag, Search } from "lucide-react";
 import Slide from "@/components/Slide";
 import { useFeatureModals } from "@/contexts/FeatureModalsContext";
+import { usePresentation } from "@/contexts/PresentationContext";
 
 const features = [
   {
@@ -30,7 +32,29 @@ const features = [
 ];
 
 const FeaturesSlide = () => {
-  const { openReconcile, openResearch, openFlagging } = useFeatureModals();
+  const { openReconcile, openResearch, openFlagging, advanceCapabilities, reverseCapabilities, resetCapabilitiesWalkthrough } = useFeatureModals();
+  const { registerNavInterceptor, currentSlide } = usePresentation();
+
+  // Detect whether this slide is the active one by checking the wrapper visibility class.
+  const isActive = () => {
+    const el = document.querySelector('[data-slide="features"]');
+    const wrapper = el?.closest('.absolute.inset-0');
+    return wrapper?.classList.contains('opacity-100') ?? false;
+  };
+
+  useEffect(() => {
+    registerNavInterceptor((dir) => {
+      if (!isActive()) return false;
+      if (dir === "next") return advanceCapabilities();
+      return reverseCapabilities();
+    });
+    return () => registerNavInterceptor(null);
+  }, [registerNavInterceptor, advanceCapabilities, reverseCapabilities]);
+
+  // Reset walkthrough whenever we navigate away from this slide.
+  useEffect(() => {
+    if (!isActive()) resetCapabilitiesWalkthrough();
+  }, [currentSlide, resetCapabilitiesWalkthrough]);
 
   const handleCardClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
@@ -42,7 +66,7 @@ const FeaturesSlide = () => {
 
   return (
     <Slide>
-      <div className="max-w-6xl mx-auto">
+      <div data-slide="features" className="max-w-6xl mx-auto">
         <span className="text-primary text-sm font-medium tracking-widest uppercase mb-6 block animate-fade-up">
           Capabilities
         </span>
