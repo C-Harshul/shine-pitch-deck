@@ -26,20 +26,31 @@ const Presentation = ({ children, contentSlideCount: contentSlideCountProp }: Pr
     setTimeout(() => setIsAnimating(false), 600);
   }, [isAnimating]);
 
-  const navInterceptorRef = useRef<NavInterceptor | null>(null);
+  const navInterceptorsRef = useRef<Set<NavInterceptor>>(new Set());
   const registerNavInterceptor = useCallback((fn: NavInterceptor | null) => {
-    navInterceptorRef.current = fn;
+    if (fn === null) return;
+    navInterceptorsRef.current.add(fn);
+  }, []);
+  const unregisterNavInterceptor = useCallback((fn: NavInterceptor) => {
+    navInterceptorsRef.current.delete(fn);
   }, []);
 
+  const runInterceptors = (dir: "next" | "prev") => {
+    for (const fn of navInterceptorsRef.current) {
+      if (fn(dir)) return true;
+    }
+    return false;
+  };
+
   const nextSlide = useCallback(() => {
-    if (navInterceptorRef.current?.("next")) return;
+    if (runInterceptors("next")) return;
     if (currentSlide < totalSlides - 1) {
       goToSlide(currentSlide + 1, "next");
     }
   }, [currentSlide, totalSlides, goToSlide]);
 
   const prevSlide = useCallback(() => {
-    if (navInterceptorRef.current?.("prev")) return;
+    if (runInterceptors("prev")) return;
     if (currentSlide > 0) {
       goToSlide(currentSlide - 1, "prev");
     }
