@@ -130,18 +130,18 @@ const HockeyStickSlide = () => {
           clearInterval(drawInterval);
           setPhase(2);
         }
-      }, 50);
+      }, ms(50));
       timers.push(drawInterval as unknown as NodeJS.Timeout);
     }
 
     if (phase === 2) {
-      timers.push(setTimeout(() => setPhase(3), 1500));
+      timers.push(setTimeout(() => setPhase(3), ms(1500)));
     }
 
     if (phase === 3) {
-      timers.push(setTimeout(() => setShowNuminaPoint(true), 500));
-      timers.push(setTimeout(() => setShowYAxisLine(true), 1000));
-      timers.push(setTimeout(() => setShowMetrics(true), 1500));
+      timers.push(setTimeout(() => setShowNuminaPoint(true), ms(500)));
+      timers.push(setTimeout(() => setShowYAxisLine(true), ms(1000)));
+      timers.push(setTimeout(() => setShowMetrics(true), ms(1500)));
 
       let count = 15;
       const countInterval = setInterval(() => {
@@ -151,17 +151,17 @@ const HockeyStickSlide = () => {
         } else {
           clearInterval(countInterval);
         }
-      }, 50);
+      }, ms(50));
       timers.push(countInterval as unknown as NodeJS.Timeout);
 
-      timers.push(setTimeout(() => setPhase(4), 2500));
+      timers.push(setTimeout(() => setPhase(4), ms(2500)));
     }
 
     if (phase === 4) {
       timers.push(setTimeout(() => {
         setIsPlaying(false);
         setPhase(5);
-      }, 1200));
+      }, ms(1200)));
     }
 
     return () => {
