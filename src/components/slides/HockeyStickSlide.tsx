@@ -78,9 +78,6 @@ const HockeyStickSlide = () => {
     setPhase(1);
   }, [resetAnimation]);
 
-  const showClosingOverlay = useCallback(() => {
-    setShowClosing(true);
-  }, []);
 
   // Detect whether this slide is the active one
   const isActive = useCallback(() => {
