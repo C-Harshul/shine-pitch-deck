@@ -1,7 +1,7 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, Maximize, Minimize } from "lucide-react";
 import { cn } from "@/lib/utils";
-import PresentationContext, { type PresentationContextValue } from "@/contexts/PresentationContext";
+import PresentationContext, { type PresentationContextValue, type NavInterceptor } from "@/contexts/PresentationContext";
 
 interface PresentationProps {
   children: React.ReactNode[];
