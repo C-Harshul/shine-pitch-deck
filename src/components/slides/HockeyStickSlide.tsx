@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   AreaChart,
@@ -9,7 +9,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import Slide from "@/components/Slide";
-import { Play, RotateCcw } from "lucide-react";
+import { usePresentation } from "@/contexts/PresentationContext";
 
 // Capacity curve: derived capacity equation from P–K (see appendix).
 // y(x) = Y0 · M(x/100), M(r) = [1 + α(1 + C_s²)] / [1 + α(1 + (1−r)C_s²)], α = ρ/(2(1−ρ)).
