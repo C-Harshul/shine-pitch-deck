@@ -415,17 +415,6 @@ const HockeyStickSlide = () => {
           Curve from derived capacity equation y(x) = Y<sub>0</sub>·M(x/100) (P–K, M/G/1; ρ = 0.9, C<sub>s</sub>² = 3, Y<sub>0</sub> = 15). Full derivation and assumptions in appendix.
         </motion.div>
 
-        {/* Hint */}
-        {!isPlaying && animatedData.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="text-center text-muted-foreground text-sm mt-1"
-          >
-            Click "Play Animation" to see the capacity curve
-          </motion.div>
-        )}
       </div>
     </Slide>
   );
