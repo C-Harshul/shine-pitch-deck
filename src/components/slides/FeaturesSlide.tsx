@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { RefreshCw, Flag, Search } from "lucide-react";
 import Slide from "@/components/Slide";
 import { useFeatureModals } from "@/contexts/FeatureModalsContext";
+import { usePresentation } from "@/contexts/PresentationContext";
 
 const features = [
   {
@@ -30,7 +32,32 @@ const features = [
 ];
 
 const FeaturesSlide = () => {
-  const { openReconcile, openResearch, openFlagging } = useFeatureModals();
+  const { openReconcile, openResearch, openFlagging, advanceCapabilities, reverseCapabilities, resetCapabilitiesWalkthrough } = useFeatureModals();
+  const { registerNavInterceptor, currentSlide, totalSlides } = usePresentation();
+
+  // Find this slide's index by checking if it's currently active.
+  // Since we can't know our index, we register on mount of currentSlide and let parent route based on visibility.
+  // Simpler: since FeaturesSlide is only rendered once, we register/unregister based on whether it's the active slide.
+  // We detect activeness by listening to a render check below.
+  useEffect(() => {
+    // Determine whether this slide is the active one by reading our DOM ancestor.
+    // Easier: register always, but only intercept if our DOM is the visible slide.
+    const check = () => {
+      const el = document.querySelector('[data-slide="features"]');
+      if (!el) return false;
+      const wrapper = el.closest('.absolute.inset-0');
+      return wrapper?.classList.contains('opacity-100') ?? false;
+    };
+    registerNavInterceptor((dir) => {
+      if (!check()) return false;
+      if (dir === "next") return advanceCapabilities();
+      return reverseCapabilities();
+    });
+    return () => {
+      registerNavInterceptor(null);
+      resetCapabilitiesWalkthrough();
+    };
+  }, [registerNavInterceptor, advanceCapabilities, reverseCapabilities, resetCapabilitiesWalkthrough, currentSlide, totalSlides]);
 
   const handleCardClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
