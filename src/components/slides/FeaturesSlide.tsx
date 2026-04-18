@@ -66,7 +66,7 @@ const FeaturesSlide = () => {
 
   return (
     <Slide>
-      <div className="max-w-6xl mx-auto">
+      <div data-slide="features" className="max-w-6xl mx-auto">
         <span className="text-primary text-sm font-medium tracking-widest uppercase mb-6 block animate-fade-up">
           Capabilities
         </span>
