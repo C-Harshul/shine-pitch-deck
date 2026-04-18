@@ -33,7 +33,7 @@ const features = [
 
 const FeaturesSlide = () => {
   const { openReconcile, openResearch, openFlagging, advanceCapabilities, reverseCapabilities, resetCapabilitiesWalkthrough } = useFeatureModals();
-  const { registerNavInterceptor, currentSlide } = usePresentation();
+  const { registerNavInterceptor, unregisterNavInterceptor, currentSlide } = usePresentation();
 
   // Detect whether this slide is the active one by checking the wrapper visibility class.
   const isActive = () => {
@@ -43,13 +43,14 @@ const FeaturesSlide = () => {
   };
 
   useEffect(() => {
-    registerNavInterceptor((dir) => {
+    const interceptor = (dir: "next" | "prev") => {
       if (!isActive()) return false;
       if (dir === "next") return advanceCapabilities();
       return reverseCapabilities();
-    });
-    return () => registerNavInterceptor(null);
-  }, [registerNavInterceptor, advanceCapabilities, reverseCapabilities]);
+    };
+    registerNavInterceptor(interceptor);
+    return () => unregisterNavInterceptor(interceptor);
+  }, [registerNavInterceptor, unregisterNavInterceptor, advanceCapabilities, reverseCapabilities]);
 
   // Reset walkthrough whenever we navigate away from this slide.
   useEffect(() => {
