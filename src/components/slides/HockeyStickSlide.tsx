@@ -197,33 +197,7 @@ const HockeyStickSlide = () => {
           </div>
         </motion.div>
 
-        {/* Controls */}
-        <div className="flex justify-center gap-4 mb-3">
-          <button
-            onClick={startAnimation}
-            disabled={isPlaying}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 hover:bg-primary/30 transition-colors disabled:opacity-50"
-          >
-            <Play className="w-4 h-4" />
-            <span className="text-sm">Play Animation</span>
-          </button>
-          {phase === 5 && !showClosing && (
-            <button
-              onClick={showClosingOverlay}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/20 border border-green-500/30 hover:bg-green-500/30 transition-colors animate-pulse"
-            >
-              <Play className="w-4 h-4" />
-              <span className="text-sm">Show Results</span>
-            </button>
-          )}
-          <button
-            onClick={resetAnimation}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 border border-border/50 hover:bg-card transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-            <span className="text-sm">Reset</span>
-          </button>
-        </div>
+        {/* Controls removed — animation auto-plays; navigate with arrow keys */}
 
         {/* Chart */}
         <div className="flex-1 relative min-h-[280px]">
