@@ -111,6 +111,7 @@ const Presentation = ({ children, contentSlideCount: contentSlideCountProp }: Pr
     currentSlide,
     totalSlides,
     contentSlideCount,
+    registerNavInterceptor,
   };
 
   return (
