@@ -12,11 +12,8 @@ const ImpactSlide = () => {
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 animate-fade-up delay-100 max-w-5xl leading-tight">
           Numina's <span className="text-primary">breadth</span> + CPA's <span className="text-primary">depth</span>
         </h2>
-        <p className="text-xl md:text-2xl lg:text-3xl font-semibold mb-10 animate-fade-up delay-150 max-w-5xl leading-snug">
-          Numina's <span className="text-primary">breadth</span> + accountant's <span className="text-primary">depth</span> = tailored service for every SMB
-        </p>
 
-        <div className="grid grid-cols-12 gap-6 items-center">
+        <div className="grid grid-cols-12 gap-6 items-center mt-8">
           {/* Left side — Service model T-shape */}
           <div className="col-span-12 lg:col-span-7 animate-fade-up delay-200">
             <div className="relative rounded-2xl border-2 border-dashed border-primary/40 p-6 pt-10">
@@ -46,9 +43,9 @@ const ImpactSlide = () => {
                     </span>
                     <span className="text-primary text-xl mt-2">↓</span>
                   </div>
-                  <div className="feature-card p-5 text-center bg-primary/5 border-primary/30 w-64 flex flex-col justify-center">
+                  <div className="feature-card p-8 text-center bg-primary/5 border-primary/30 w-64 min-h-[280px] flex flex-col justify-center">
                     <div className="text-xl font-bold text-foreground">Accountants / CPAs</div>
-                    <div className="text-sm text-muted-foreground mt-1">Domain experts</div>
+                    <div className="text-sm text-muted-foreground mt-2">Domain experts</div>
                   </div>
                 </div>
               </div>
