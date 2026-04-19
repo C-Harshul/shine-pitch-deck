@@ -14,6 +14,7 @@ import ControlSlide from "@/components/slides/ControlSlide";
 import ImpactSlide from "@/components/slides/ImpactSlide";
 
 import MomentumSlide from "@/components/slides/MomentumSlide";
+import GTMSlide from "@/components/slides/GTMSlide";
 import CTASlide from "@/components/slides/CTASlide";
 import AppendixTitleSlide from "@/components/slides/appendix/AppendixTitleSlide";
 import TShapedSlide from "@/components/slides/appendix/TShapedSlide";
