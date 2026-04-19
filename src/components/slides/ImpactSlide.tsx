@@ -1,40 +1,86 @@
 import Slide from "@/components/Slide";
+import { ArrowRight, ShoppingCart, Utensils, User, Briefcase } from "lucide-react";
 
 const ImpactSlide = () => {
   return (
     <Slide>
-      <div className="max-w-5xl mx-auto">
-        <span className="text-primary text-base font-medium tracking-widest uppercase mb-6 block animate-fade-up">
-          Monetisation Strategy
+      <div className="max-w-7xl mx-auto w-full">
+        <span className="text-primary text-base font-medium tracking-widest uppercase mb-4 block animate-fade-up">
+          Business Model
         </span>
 
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 animate-fade-up delay-100">
-          <span className="text-primary">Value based pricing</span> tied to firm revenue
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-10 animate-fade-up delay-100 max-w-5xl leading-tight">
+          Accountants / CPAs act as <span className="text-primary">distribution channel</span> to service SMBs across industries
         </h2>
-        <p className="text-muted-foreground text-lg md:text-xl mb-10 max-w-3xl animate-fade-up delay-150">
-          We're determining the optimal pricing model and percentage. This approach aligns our incentives with CPA firm success.
-        </p>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div className="feature-card text-center animate-fade-up delay-200 p-8">
-            <div className="text-base text-foreground mb-3">Revenue per firm / month</div>
-            <div className="flex items-center justify-center gap-4 my-5">
-              <span className="text-3xl text-foreground">$30K–60K</span>
-              <span className="text-3xl text-primary">→</span>
-              <span className="text-4xl font-bold text-foreground">$60K–120K</span>
+        <div className="grid grid-cols-12 gap-6 items-center">
+          {/* Left side — Service model T-shape */}
+          <div className="col-span-12 lg:col-span-7 animate-fade-up delay-200">
+            <div className="relative rounded-2xl border-2 border-dashed border-primary/40 p-6 pt-10">
+              <span className="absolute -top-3 left-6 bg-background px-3 text-sm font-medium tracking-widest uppercase text-primary">
+                Service Model
+              </span>
+
+              <div className="flex flex-col items-center gap-0">
+                {/* Horizontal bar — Numina (Breadth) */}
+                <div className="w-full">
+                  <div className="feature-card p-5 text-center bg-primary/10 border-primary/40">
+                    <div className="text-2xl font-bold text-foreground">Numina</div>
+                    <div className="text-sm text-muted-foreground mt-1">Orchestration engine</div>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 mt-3 mb-1">
+                    <span className="text-primary text-xl">←</span>
+                    <span className="text-primary text-lg font-bold tracking-widest uppercase">Breadth</span>
+                    <span className="text-primary text-xl">→</span>
+                  </div>
+                </div>
+
+                {/* Vertical bar — Accountants (Depth) */}
+                <div className="flex items-stretch gap-4 mt-2">
+                  <div className="flex flex-col items-center justify-center">
+                    <span className="text-primary text-lg font-bold tracking-widest uppercase [writing-mode:vertical-rl] rotate-180">
+                      Depth
+                    </span>
+                    <span className="text-primary text-xl mt-2">↓</span>
+                  </div>
+                  <div className="feature-card p-5 text-center bg-primary/5 border-primary/30 w-64 flex flex-col justify-center">
+                    <div className="text-xl font-bold text-foreground">Accountants / CPAs</div>
+                    <div className="text-sm text-muted-foreground mt-1">Domain experts</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="feature-card text-center animate-fade-up delay-300 p-8">
-            <div className="text-base text-foreground mb-3">
-              Our approach<span className="text-primary font-bold">?</span>
+          {/* Arrow */}
+          <div className="hidden lg:flex col-span-1 items-center justify-center animate-fade-up delay-300">
+            <ArrowRight className="w-12 h-12 text-primary" strokeWidth={2.5} />
+          </div>
+
+          {/* Right side — SMBs */}
+          <div className="col-span-12 lg:col-span-4 animate-fade-up delay-300">
+            <div className="feature-card p-5">
+              <div className="text-center mb-4">
+                <div className="text-xl font-bold text-foreground">SMBs</div>
+                <div className="text-sm text-muted-foreground">End beneficiary</div>
+              </div>
+              <div className="space-y-2">
+                {[
+                  { icon: ShoppingCart, label: "E-commerce" },
+                  { icon: Utensils, label: "Restaurants" },
+                  { icon: User, label: "Freelancers" },
+                  { icon: Briefcase, label: "Professional services" },
+                ].map(({ icon: Icon, label }) => (
+                  <div
+                    key={label}
+                    className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30 border border-border/50"
+                  >
+                    <Icon className="w-4 h-4 text-primary flex-shrink-0" />
+                    <span className="text-sm text-foreground">{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex items-center justify-center my-5">
-              <span className="text-4xl font-bold">$3K–6K per firm</span>
-            </div>
-            <p className="text-muted-foreground text-sm mt-2">
-              At just 10% of captured value
-            </p>
           </div>
         </div>
       </div>
