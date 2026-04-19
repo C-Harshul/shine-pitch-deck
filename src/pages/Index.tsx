@@ -18,7 +18,8 @@ import GTMSlide from "@/components/slides/GTMSlide";
 import CTASlide from "@/components/slides/CTASlide";
 
 import TeamSlide from "@/components/slides/appendix/TeamSlide";
-  return (
+
+const Index = () => {
     <FeatureModalsProvider>
       <Presentation contentSlideCount={14}>
         <AthenaSlide />
