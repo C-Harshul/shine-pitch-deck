@@ -14,6 +14,7 @@ import ControlSlide from "@/components/slides/ControlSlide";
 import ImpactSlide from "@/components/slides/ImpactSlide";
 
 import MomentumSlide from "@/components/slides/MomentumSlide";
+import GTMSlide from "@/components/slides/GTMSlide";
 import CTASlide from "@/components/slides/CTASlide";
 import AppendixTitleSlide from "@/components/slides/appendix/AppendixTitleSlide";
 import TShapedSlide from "@/components/slides/appendix/TShapedSlide";
@@ -29,7 +30,7 @@ import AppendixDocumentsSlide from "@/components/slides/appendix/AppendixDocumen
 const Index = () => {
   return (
     <FeatureModalsProvider>
-      <Presentation contentSlideCount={12}>
+      <Presentation contentSlideCount={13}>
         <AthenaSlide />
         <TitleSlide />
         <InsightSlide />
@@ -43,6 +44,7 @@ const Index = () => {
         
         <ImpactSlide />
         <MomentumSlide />
+        <GTMSlide />
         <CTASlide />
         {/* Appendix */}
         <AppendixTitleSlide />
