@@ -30,7 +30,7 @@ import AppendixDocumentsSlide from "@/components/slides/appendix/AppendixDocumen
 const Index = () => {
   return (
     <FeatureModalsProvider>
-      <Presentation contentSlideCount={13}>
+      <Presentation contentSlideCount={14}>
         <AthenaSlide />
         <TitleSlide />
         <InsightSlide />
@@ -47,11 +47,9 @@ const Index = () => {
         <TeamSlide />
         <GTMSlide />
         <CTASlide />
-        <CTASlide />
         {/* Appendix */}
         <AppendixTitleSlide />
         <AppendixDocumentsSlide />
-        <TeamSlide />
         <TShapedSlide />
         <StrategicPositioningSlide />
         <FellowshipTimelineSlide />
