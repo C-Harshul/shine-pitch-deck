@@ -9,9 +9,12 @@ const ImpactSlide = () => {
           Business Model
         </span>
 
-        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-10 animate-fade-up delay-100 max-w-5xl leading-tight">
-          Accountants / CPAs act as <span className="text-primary">distribution channel</span> to service SMBs across industries
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 animate-fade-up delay-100 max-w-5xl leading-tight">
+          CPAs act as <span className="text-primary">distribution channel</span> to build our AI accounting service model
         </h2>
+        <p className="text-xl md:text-2xl lg:text-3xl font-semibold mb-10 animate-fade-up delay-150 max-w-5xl leading-snug">
+          Numina's <span className="text-primary">breadth</span> + accountant's <span className="text-primary">depth</span> = tailored service for every SMB
+        </p>
 
         <div className="grid grid-cols-12 gap-6 items-center">
           {/* Left side — Service model T-shape */}
