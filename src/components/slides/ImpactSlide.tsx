@@ -10,7 +10,7 @@ const ImpactSlide = () => {
         </span>
 
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 animate-fade-up delay-100 max-w-5xl leading-tight">
-          CPAs act as <span className="text-primary">distribution channel</span> to build our AI accounting service model
+          Numina's <span className="text-primary">breadth</span> + CPA's <span className="text-primary">depth</span>
         </h2>
         <p className="text-xl md:text-2xl lg:text-3xl font-semibold mb-10 animate-fade-up delay-150 max-w-5xl leading-snug">
           Numina's <span className="text-primary">breadth</span> + accountant's <span className="text-primary">depth</span> = tailored service for every SMB
