@@ -44,6 +44,7 @@ const Index = () => {
         
         <ImpactSlide />
         <MomentumSlide />
+        <GTMSlide />
         <CTASlide />
         {/* Appendix */}
         <AppendixTitleSlide />
