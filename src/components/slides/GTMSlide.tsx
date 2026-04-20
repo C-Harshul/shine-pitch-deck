@@ -125,7 +125,7 @@ const GTMSlide = () => {
 
         <div className="mt-8 animate-fade-up delay-600 border-t border-border/30 pt-6 text-center">
           <p className="text-lg md:text-xl text-muted-foreground italic">
-            "The accounting industry is at the cusp of a revolution, and through Numina I aim to help enable it"
+            "The accounting industry is at the cusp of a revolution, and through Numina we aim to help enable it"
           </p>
         </div>
       </div>
