@@ -15,8 +15,8 @@ const painPoints = [
   },
   {
     icon: TrendingDown,
-    title: "Delayed financial visibility",
-    description: "Business owners don't know their true financial position until weeks after month-end."
+    title: "Capped capacity",
+    description: "CPAs can't take on new SMB clients because existing engagements consume all available hours. Growth stalls, and the most profitable prospects go unserved."
   }
 ];
 
