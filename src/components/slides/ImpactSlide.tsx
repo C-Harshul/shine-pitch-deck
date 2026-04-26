@@ -29,8 +29,8 @@ const detailContent: Record<DetailKey, { title: string; body: string; graphic: J
       <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-3">
         {[
           ["SMB", "$5,400/mo", "Client invoice"],
-          ["CPA", "Keeps $4,400", "Same rate"],
-          ["NUMINA", "Receives $1,000", "Surcharge"],
+          ["CPA", "Keeps $4,400", "2x capacity · +$22K top line"],
+          ["NUMINA", "Receives $1,000", "Paid by accountant"],
         ].map(([label, value, note], index) => (
           <>
             <div key={label} className="rounded-xl border border-border/60 bg-card/70 p-4 text-center">
@@ -38,7 +38,12 @@ const detailContent: Record<DetailKey, { title: string; body: string; graphic: J
               <div className="mt-2 text-xl font-bold text-primary">{value}</div>
               <div className="mt-1 text-xs text-muted-foreground">{note}</div>
             </div>
-            {index < 2 && <ArrowRight key={`${label}-arrow`} className="h-6 w-6 text-primary" />}
+            {index < 2 && (
+              <div key={`${label}-arrow`} className="flex flex-col items-center gap-1">
+                <ArrowRight className={`h-7 w-7 ${index === 1 ? "text-primary" : "text-muted-foreground"}`} strokeWidth={index === 1 ? 3 : 2} />
+                {index === 1 && <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-wider text-primary">pays Numina</span>}
+              </div>
+            )}
           </>
         ))}
       </div>
@@ -189,30 +194,12 @@ const ImpactSlide = () => {
                   <div className="mt-2 text-2xl font-bold text-foreground">$4,400</div>
                   <div className="text-xs text-muted-foreground">keeps same fee</div>
                 </div>
-                <div className="flex flex-col items-center gap-1">
-                  <ArrowRight className="h-8 w-8 text-primary" strokeWidth={3} />
-                  <div className="whitespace-nowrap rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary">
-                    pays Numina
-                  </div>
-                </div>
+                <ArrowRight className="h-6 w-6 text-primary" />
                 <div className="rounded-xl border border-primary/50 bg-primary/10 p-4">
                   <div className="text-xs uppercase tracking-widest text-primary">NUMINA</div>
                   <div className="mt-2 text-2xl font-bold text-primary">$1,000</div>
                   <div className="text-xs text-muted-foreground">per SMB / mo</div>
                 </div>
-              </div>
-
-              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                {[
-                  ["2x", "client capacity"],
-                  ["+$22K", "monthly top line"],
-                  ["18 hrs", "freed per client"],
-                ].map(([value, label]) => (
-                  <div key={label} className="rounded-lg border border-border/50 bg-card/60 p-3">
-                    <div className="text-xl font-bold text-primary">{value}</div>
-                    <div className="mt-1 text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
-                  </div>
-                ))}
               </div>
             </div>
 
