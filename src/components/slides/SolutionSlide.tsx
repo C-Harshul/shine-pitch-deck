@@ -14,7 +14,7 @@ const SolutionSlide = () => {
         </h2>
         
         <p className="text-2xl md:text-3xl font-semibold mt-4 animate-fade-up delay-200">
-          The layer to enable <span className="text-primary">Realtime Closing</span>
+          The orchestrator to enable <span className="text-primary">Realtime Closing</span>
         </p>
 
         <div className="feature-card max-w-2xl mx-auto mt-12 p-10 animate-fade-up delay-300">
