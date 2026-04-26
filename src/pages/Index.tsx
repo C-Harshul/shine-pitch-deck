@@ -32,9 +32,8 @@ const Index = () => {
         <HowItWorksSlide />
         <FeaturesSlide />
         <ControlSlide />
-        <HockeyStickSlide />
-        
         <ImpactSlide />
+        <HockeyStickSlide />
         <MomentumSlide />
         <TeamSlide />
         <GTMSlide />
