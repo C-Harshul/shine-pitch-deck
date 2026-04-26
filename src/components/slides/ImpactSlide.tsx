@@ -24,14 +24,14 @@ const ImpactSlide = () => {
               <div className="flex flex-col items-center gap-0">
                 {/* Horizontal bar — Numina (Breadth) */}
                 <div className="w-full">
-                  <div className="feature-card p-5 text-center bg-primary/10 border-primary/40">
-                    <div className="text-2xl font-bold text-foreground">Numina</div>
-                    <div className="text-sm text-muted-foreground mt-1">Orchestration engine</div>
-                  </div>
-                  <div className="flex items-center justify-center gap-3 mt-3 mb-1">
+                  <div className="flex items-center justify-center gap-3 mb-3">
                     <span className="text-primary text-xl">←</span>
                     <span className="text-primary text-lg font-bold tracking-widest uppercase">Breadth</span>
                     <span className="text-primary text-xl">→</span>
+                  </div>
+                  <div className="feature-card p-5 text-center bg-primary/10 border-primary/40">
+                    <div className="text-2xl font-bold text-foreground">Numina</div>
+                    <div className="text-sm text-muted-foreground mt-1">Orchestration engine</div>
                   </div>
                 </div>
 
@@ -46,13 +46,13 @@ const ImpactSlide = () => {
                   <div className="feature-card p-8 text-center bg-primary/5 border-primary/30 w-64 min-h-[280px] flex flex-col justify-center relative">
                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 flex flex-col items-center text-primary">
                       <ArrowUp className="w-8 h-8" strokeWidth={2.5} />
-                      <div className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase whitespace-nowrap mt-1">
-                        <DollarSign className="w-3.5 h-3.5" strokeWidth={2.5} />
-                        Increased capacity + top line
-                      </div>
+                      <DollarSign className="w-4 h-4 mt-1" strokeWidth={2.5} />
                     </div>
                     <div className="text-xl font-bold text-foreground">Accountants / CPAs</div>
                     <div className="text-sm text-muted-foreground mt-2">Domain experts</div>
+                    <div className="mt-4 text-xs font-bold tracking-widest uppercase text-primary leading-relaxed">
+                      Increased capacity + top line
+                    </div>
                   </div>
                 </div>
               </div>
