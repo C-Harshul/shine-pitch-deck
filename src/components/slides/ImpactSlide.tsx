@@ -189,12 +189,30 @@ const ImpactSlide = () => {
                   <div className="mt-2 text-2xl font-bold text-foreground">$4,400</div>
                   <div className="text-xs text-muted-foreground">keeps same fee</div>
                 </div>
-                <ArrowRight className="h-6 w-6 text-primary" />
+                <div className="flex flex-col items-center gap-1">
+                  <ArrowRight className="h-8 w-8 text-primary" strokeWidth={3} />
+                  <div className="whitespace-nowrap rounded-full border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                    pays Numina
+                  </div>
+                </div>
                 <div className="rounded-xl border border-primary/50 bg-primary/10 p-4">
                   <div className="text-xs uppercase tracking-widest text-primary">NUMINA</div>
                   <div className="mt-2 text-2xl font-bold text-primary">$1,000</div>
                   <div className="text-xs text-muted-foreground">per SMB / mo</div>
                 </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                {[
+                  ["2x", "client capacity"],
+                  ["+$22K", "monthly top line"],
+                  ["18 hrs", "freed per client"],
+                ].map(([value, label]) => (
+                  <div key={label} className="rounded-lg border border-border/50 bg-card/60 p-3">
+                    <div className="text-xl font-bold text-primary">{value}</div>
+                    <div className="mt-1 text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
