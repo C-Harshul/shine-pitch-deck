@@ -16,7 +16,7 @@ const painPoints = [
   {
     icon: TrendingDown,
     title: "Capped capacity",
-    description: "CPAs can't take on new SMB clients because existing engagements consume all available hours. Growth stalls, and the most profitable prospects go unserved."
+    description: "CPAs can't take on new SMB clients because existing engagements consume all available hours."
   }
 ];
 
