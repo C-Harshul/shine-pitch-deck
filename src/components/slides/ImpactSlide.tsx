@@ -1,5 +1,5 @@
 import Slide from "@/components/Slide";
-import { ArrowRight, ShoppingCart, Utensils, User, Briefcase } from "lucide-react";
+import { ArrowRight, ShoppingCart, Utensils, User, Briefcase, ArrowUp, DollarSign } from "lucide-react";
 
 const ImpactSlide = () => {
   return (
@@ -43,7 +43,14 @@ const ImpactSlide = () => {
                     </span>
                     <span className="text-primary text-xl mt-2">↓</span>
                   </div>
-                  <div className="feature-card p-8 text-center bg-primary/5 border-primary/30 w-64 min-h-[280px] flex flex-col justify-center">
+                  <div className="feature-card p-8 text-center bg-primary/5 border-primary/30 w-64 min-h-[280px] flex flex-col justify-center relative">
+                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 flex flex-col items-center text-primary">
+                      <ArrowUp className="w-8 h-8" strokeWidth={2.5} />
+                      <div className="flex items-center gap-1 text-xs font-bold tracking-widest uppercase whitespace-nowrap mt-1">
+                        <DollarSign className="w-3.5 h-3.5" strokeWidth={2.5} />
+                        Increased capacity + top line
+                      </div>
+                    </div>
                     <div className="text-xl font-bold text-foreground">Accountants / CPAs</div>
                     <div className="text-sm text-muted-foreground mt-2">Domain experts</div>
                   </div>
