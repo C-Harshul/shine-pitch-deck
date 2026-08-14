@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useFeatureModals } from "@/contexts/FeatureModalsContext";
+import { usePresentation } from "@/contexts/PresentationContext";
+import { cn } from "@/lib/utils";
 import DocumentProcessingAnimation from "@/components/DocumentProcessingAnimation";
 import ResearchAnimation from "@/components/ResearchAnimation";
 import NuminaIntelligenceDiagram from "@/components/NuminaIntelligenceDiagram";
