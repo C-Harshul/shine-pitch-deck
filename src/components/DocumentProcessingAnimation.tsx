@@ -366,6 +366,32 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
               </div>
             </div>
 
+            {/* Navigation arrows between capability overlays */}
+            <button
+              onClick={handlePrev}
+              className={cn(
+                "absolute left-4 top-1/2 -translate-y-1/2 z-20",
+                "w-12 h-12 rounded-full flex items-center justify-center",
+                "bg-card/50 border border-border/50 backdrop-blur-sm",
+                "transition-all duration-300 hover:bg-card hover:border-primary/30"
+              )}
+              title="Previous capability"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={handleNext}
+              className={cn(
+                "absolute right-4 top-1/2 -translate-y-1/2 z-20",
+                "w-12 h-12 rounded-full flex items-center justify-center",
+                "bg-card/50 border border-border/50 backdrop-blur-sm",
+                "transition-all duration-300 hover:bg-card hover:border-primary/30"
+              )}
+              title="Next capability"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+
             {/* Bottom label */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-muted-foreground">
               Click anywhere outside to close
