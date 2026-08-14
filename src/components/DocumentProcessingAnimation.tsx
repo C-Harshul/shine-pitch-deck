@@ -1,6 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Receipt, ClipboardList, CheckCircle2, X, Mail, MessageSquare, Globe, Sparkles, BookOpen } from "lucide-react";
+import { FileText, Receipt, ClipboardList, CheckCircle2, X, Mail, MessageSquare, Globe, Sparkles, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useFeatureModals } from "@/contexts/FeatureModalsContext";
+import { usePresentation } from "@/contexts/PresentationContext";
+import { cn } from "@/lib/utils";
 
 interface DocumentProcessingAnimationProps {
   isOpen: boolean;
