@@ -23,7 +23,33 @@ const FeatureModals = () => {
     setResearchView,
     flaggingView,
     setFlaggingView,
+    advanceCapabilities,
+    reverseCapabilities,
   } = useFeatureModals();
+  const { goToSlide, currentSlide } = usePresentation();
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const consumed = advanceCapabilities();
+    if (!consumed) {
+      goToSlide(currentSlide + 1, "next");
+    }
+  };
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const consumed = reverseCapabilities();
+    if (!consumed) {
+      goToSlide(currentSlide - 1, "prev");
+    }
+  };
+
+  const arrowButtonClass = cn(
+    "absolute top-1/2 -translate-y-1/2 z-20",
+    "w-12 h-12 rounded-full flex items-center justify-center",
+    "bg-card/50 border border-border/50 backdrop-blur-sm",
+    "transition-all duration-300 hover:bg-card hover:border-primary/30"
+  );
 
   return (
     <>
