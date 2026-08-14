@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { RefreshCw, Flag, Search } from "lucide-react";
+import { RefreshCw, Flag, Search, ArrowRight } from "lucide-react";
 import Slide from "@/components/Slide";
 import { useFeatureModals } from "@/contexts/FeatureModalsContext";
 import { usePresentation } from "@/contexts/PresentationContext";
