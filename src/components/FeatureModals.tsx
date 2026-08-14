@@ -197,6 +197,21 @@ const FeatureModals = () => {
                   )}
                 </div>
               </div>
+              {/* Navigation arrows between capability overlays */}
+              <button
+                onClick={handlePrev}
+                className={cn(arrowButtonClass, "left-4")}
+                title="Previous capability"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={handleNext}
+                className={cn(arrowButtonClass, "right-4")}
+                title="Next capability"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
             </motion.div>
           </motion.div>
         )}
