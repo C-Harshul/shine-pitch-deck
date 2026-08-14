@@ -21,7 +21,7 @@ import TeamSlide from "@/components/slides/appendix/TeamSlide";
 const Index = () => {
   return (
     <FeatureModalsProvider>
-      <Presentation contentSlideCount={13}>
+      <Presentation contentSlideCount={13} overlay={<FeatureModals />}>
         <AthenaSlide />
         <TitleSlide />
         <InsightSlide />
@@ -38,7 +38,6 @@ const Index = () => {
         <TeamSlide />
         <CTASlide />
       </Presentation>
-      <FeatureModals />
     </FeatureModalsProvider>
   );
 };

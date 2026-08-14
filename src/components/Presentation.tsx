@@ -5,11 +5,13 @@ import PresentationContext, { type PresentationContextValue, type NavInterceptor
 
 interface PresentationProps {
   children: React.ReactNode[];
+  /** Extra content rendered inside the presentation context (e.g. modals). */
+  overlay?: React.ReactNode;
   /** Number of main content slides (after Athena). Counter/progress bar only show for these; appendix is excluded. */
   contentSlideCount?: number;
 }
 
-const Presentation = ({ children, contentSlideCount: contentSlideCountProp }: PresentationProps) => {
+const Presentation = ({ children, overlay, contentSlideCount: contentSlideCountProp }: PresentationProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [isAnimating, setIsAnimating] = useState(false);
@@ -233,6 +235,7 @@ const Presentation = ({ children, contentSlideCount: contentSlideCountProp }: Pr
       )}
 
     </div>
+    {overlay}
     </PresentationContext.Provider>
   );
 };
