@@ -15,7 +15,6 @@ const columns: Column[] = [
     bullets: [
       "Reconciliation & flagging tested with CPAs",
       "Knowledge base pipeline ready for deployment",
-      "15–20 CPAs piloting in India",
     ],
   },
   {
@@ -23,7 +22,7 @@ const columns: Column[] = [
     title: "Strategic Validation",
     bullets: [
       "Edward Collins (Recbooks) partnering to refine solution",
-      "Mercury: Banking partner with perks for AWS, Quickbooks credits",
+      "In the process of a partnership with a CPA firm",
       "Network of advisors shaping GTM",
     ],
   },
