@@ -34,13 +34,15 @@ export const FeatureModalsProvider = ({ children }: { children: ReactNode }) => 
   // Step tracker for the capabilities walkthrough: 0 = none shown, 1 = reconcile, 2 = flag, 3 = research, 4 = done
   const stepRef = useRef(0);
 
-  const openReconcile = useCallback(() => setReconcileOpen(true), []);
+  const openReconcile = useCallback(() => { setReconcileOpen(true); stepRef.current = 1; }, []);
   const closeReconcile = useCallback(() => setReconcileOpen(false), []);
   const openResearch = useCallback((startWithDetailed = false) => {
     setResearchViewState(startWithDetailed ? "detailed" : "simple");
+    stepRef.current = 3;
   }, []);
   const openFlagging = useCallback((startWithDetailed = false) => {
     setFlaggingViewState(startWithDetailed ? "detailed" : "simple");
+    stepRef.current = 2;
   }, []);
   const setResearchView = useCallback((view: ResearchView) => setResearchViewState(view), []);
   const setFlaggingView = useCallback((view: FlaggingView) => setFlaggingViewState(view), []);
