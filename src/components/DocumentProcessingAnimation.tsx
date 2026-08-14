@@ -1,6 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Receipt, ClipboardList, CheckCircle2, X, Mail, MessageSquare, Globe, Sparkles, BookOpen } from "lucide-react";
+import { FileText, Receipt, ClipboardList, CheckCircle2, X, Mail, MessageSquare, Globe, Sparkles, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useFeatureModals } from "@/contexts/FeatureModalsContext";
+import { usePresentation } from "@/contexts/PresentationContext";
+import { cn } from "@/lib/utils";
 
 interface DocumentProcessingAnimationProps {
   isOpen: boolean;
@@ -10,6 +13,24 @@ interface DocumentProcessingAnimationProps {
 const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnimationProps) => {
   const [phase, setPhase] = useState(0);
   const [processedDocs, setProcessedDocs] = useState<number[]>([]);
+  const { advanceCapabilities, reverseCapabilities } = useFeatureModals();
+  const { goToSlide, currentSlide } = usePresentation();
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const consumed = advanceCapabilities();
+    if (!consumed) {
+      goToSlide(currentSlide + 1, "next");
+    }
+  };
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const consumed = reverseCapabilities();
+    if (!consumed) {
+      goToSlide(currentSlide - 1, "prev");
+    }
+  };
 
   useEffect(() => {
     if (!isOpen) {
@@ -344,6 +365,32 @@ const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnim
                 </div>
               </div>
             </div>
+
+            {/* Navigation arrows between capability overlays */}
+            <button
+              onClick={handlePrev}
+              className={cn(
+                "absolute left-4 top-1/2 -translate-y-1/2 z-20",
+                "w-12 h-12 rounded-full flex items-center justify-center",
+                "bg-card/50 border border-border/50 backdrop-blur-sm",
+                "transition-all duration-300 hover:bg-card hover:border-primary/30"
+              )}
+              title="Previous capability"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={handleNext}
+              className={cn(
+                "absolute right-4 top-1/2 -translate-y-1/2 z-20",
+                "w-12 h-12 rounded-full flex items-center justify-center",
+                "bg-card/50 border border-border/50 backdrop-blur-sm",
+                "transition-all duration-300 hover:bg-card hover:border-primary/30"
+              )}
+              title="Next capability"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
 
             {/* Bottom label */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-muted-foreground">
