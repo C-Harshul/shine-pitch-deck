@@ -13,6 +13,24 @@ interface DocumentProcessingAnimationProps {
 const DocumentProcessingAnimation = ({ isOpen, onClose }: DocumentProcessingAnimationProps) => {
   const [phase, setPhase] = useState(0);
   const [processedDocs, setProcessedDocs] = useState<number[]>([]);
+  const { advanceCapabilities, reverseCapabilities } = useFeatureModals();
+  const { goToSlide, currentSlide } = usePresentation();
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const consumed = advanceCapabilities();
+    if (!consumed) {
+      goToSlide(currentSlide + 1, "next");
+    }
+  };
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const consumed = reverseCapabilities();
+    if (!consumed) {
+      goToSlide(currentSlide - 1, "prev");
+    }
+  };
 
   useEffect(() => {
     if (!isOpen) {
